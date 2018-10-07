@@ -60,25 +60,39 @@ namespace Pressius
         }
 
         public static IEnumerable<T> Generate<T>(
-            IObjectDefinition objectDefinition)
-        {
-            var inputGenerator = new MutatorFactory();
-            var inputs = inputGenerator
-                .SetObjectDefinition(objectDefinition)
-                .GeneratePermutations<T>();
-            return inputs;
-        }
-
-        public static IEnumerable<T> Generate<T>(
             IObjectDefinition objectDefinition,
             List<IParameterDefinition> parameterDefinitions)
         {
             var inputGenerator = new MutatorFactory();
             var inputs = inputGenerator
-                .SetObjectDefinition(objectDefinition)
+                .AddObjectDefinition(objectDefinition)
                 .AddParameterDefinitions(parameterDefinitions)
                 .GeneratePermutations<T>();
             return inputs;
+        }
+
+        private MutatorFactory _mutatorFactory { get; }
+
+        public Permutate()
+        {
+            _mutatorFactory = new MutatorFactory();
+        }
+
+        public Permutate AddParameterDefinition(IParameterDefinition parameterDefinition)
+        {
+            _mutatorFactory.AddParameterDefinition(parameterDefinition);
+            return this;
+        }
+
+        public Permutate AddObjectDefinition(IObjectDefinition objectDefinition)
+        {
+            _mutatorFactory.AddObjectDefinition(objectDefinition);
+            return this;
+        }
+
+        public IEnumerable<T> GeneratePermutation<T>()
+        {
+            return _mutatorFactory.GeneratePermutations<T>();
         }
 
         private class MutatorFactory
@@ -105,9 +119,15 @@ namespace Pressius
                 _objectDefinitions = new List<IObjectDefinition>();
             }
 
-            public MutatorFactory SetObjectDefinition(IObjectDefinition objectDefinition)
+            public MutatorFactory AddObjectDefinition(IObjectDefinition objectDefinition)
             {
                 _objectDefinitions.Add(objectDefinition);
+                return this;
+            }
+
+            public MutatorFactory AddParameterDefinition(IParameterDefinition parameterDefinition)
+            {
+                _inputDefinitions.Add(parameterDefinition);
                 return this;
             }
 

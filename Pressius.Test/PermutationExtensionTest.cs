@@ -17,29 +17,50 @@ namespace Pressius.Test
             };
     }
 
-    public class ValidLocation : DefaultParameterDefinition
+    public class PressiusTestObjectObjectDefinitionWithIntegerGuid
+        : PropertiesObjectDefinition<PressiusTestObject>
     {
-       public override List<object> InputCatalogues =>
-           new List<object> {
-               "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
-               "111 St Kilda, VIC 3004, Melbourne, Australia" };
-       public override ParameterTypeDefinition TypeName => 
-           new ParameterTypeDefinition("ValidLocation");
+        public override Dictionary<string, string> MatcherDictionary =>
+            new Dictionary<string, string>
+            {
+                { "Address", "ValidLocation" },
+                { "Id", "IntegerGuid" }
+            };
     }
 
-    public class PermutationExtensionTest
+    public class IntegerGuid : DefaultParameterDefinition
     {
-        private readonly ITestOutputHelper output;
+        public override List<object> InputCatalogues =>
+            new List<object> {
+                1531,
+                9975
+            };
 
-        public PermutationExtensionTest(ITestOutputHelper output)
+        public override ParameterTypeDefinition TypeName =>
+            new ParameterTypeDefinition("IntegerGuid");
+    }
+
+    public class ValidLocation : DefaultParameterDefinition
+    {
+        public override List<object> InputCatalogues =>
+            new List<object> {
+               "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
+               "111 St Kilda, VIC 3004, Melbourne, Australia" };
+
+        public override ParameterTypeDefinition TypeName =>
+            new ParameterTypeDefinition("ValidLocation");
+    }
+
+    public class PermutationExtensionTest : BaseTest
+    {
+        public PermutationExtensionTest(ITestOutputHelper output) : base(output)
         {
-            this.output = output;
         }
 
         [Fact]
-        public void GeneratePressiusTestObject_ShouldPermutate()
+        public void PressiusTestObject_ShouldPermutateWithStaticGenerator()
         {
-            var addedParameterDefinitions = 
+            var addedParameterDefinitions =
                 new List<IParameterDefinition> { new ValidLocation() };
             var pressiusTestObjectList = Permutate.Generate<PressiusTestObject>(
                 new PressiusTestObjectObjectDefinition(),
@@ -49,7 +70,26 @@ namespace Pressius.Test
             var objectList = pressiusTestObjectList.ToList();
             objectList.ForEach(obj =>
             {
-                output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+            });
+        }
+
+        [Fact]
+        public void PressiusTestObject_ShouldPermutate()
+        {
+            var pressius = new Permutate();
+            var pressiusTestObjectList = pressius
+                .AddParameterDefinition(new ValidLocation())
+                .AddParameterDefinition(new IntegerGuid())
+                .AddObjectDefinition(new PressiusTestObjectObjectDefinitionWithIntegerGuid())
+                .GeneratePermutation<PressiusTestObject>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
             });
         }
     }

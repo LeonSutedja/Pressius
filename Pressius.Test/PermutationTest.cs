@@ -1,23 +1,19 @@
-using System.Linq;
 using Pressius.Test.Model;
 using Shouldly;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Pressius.Test
 {
-    public class PermutationTest
+    public class PermutationTest : BaseTest
     {
-        private readonly ITestOutputHelper output;
-
-        public PermutationTest(ITestOutputHelper output)
+        public PermutationTest(ITestOutputHelper output) : base(output)
         {
-            this.output = output;
         }
 
-
         [Fact]
-        public void GeneratePressiusTestObject_ShouldPermutate()
+        public void PressiusTestObject_ShouldPermutate()
         {
             var pressiusTestObjectList = Permutate.Generate<PressiusTestObject>();
             pressiusTestObjectList.ShouldNotBeNull();
@@ -25,12 +21,12 @@ namespace Pressius.Test
             var objectList = pressiusTestObjectList.ToList();
             objectList.ForEach(obj =>
             {
-                output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
             });
         }
 
         [Fact]
-        public void GeneratePressiusTestObjectWithDatetime_ShouldPermutate()
+        public void PressiusTestObjectWithDatetime_ShouldPermutate()
         {
             var testObjectList = Permutate.Generate<PressiusTestObjectWithDatetime>();
             testObjectList.ShouldNotBeNull();
@@ -38,7 +34,7 @@ namespace Pressius.Test
             var objectList = testObjectList.ToList();
             objectList.ForEach(obj =>
             {
-                output.WriteLine("Obj: {0} {1} {2} {3}", obj.Id, obj.Name, obj.Address, obj.Created);
+                _output.WriteLine("Obj: {0} {1} {2} {3}", obj.Id, obj.Name, obj.Address, obj.Created);
             });
         }
     }
