@@ -99,13 +99,7 @@ namespace Pressius
         {
             private readonly List<IParameterDefinition> _inputDefinitions;
             private readonly List<IObjectDefinition> _objectDefinitions;
-
-            private Type[] GetTypesInNamespace(string nameSpace)
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                return assembly.GetTypes().Where(t => String.Equals(t.Namespace, nameSpace, StringComparison.Ordinal)).ToArray();
-            }
-
+            
             public MutatorFactory()
             {
                 _inputDefinitions = new List<IParameterDefinition>()
@@ -136,13 +130,7 @@ namespace Pressius
                 _inputDefinitions.AddRange(parameterDefinitions);
                 return this;
             }
-
-            public IEnumerable<object> GeneratePermutationsFromAssemblyQualifiedClassName(
-                string assemblyQualifiedClassName)
-            {
-                return _generateObjectPermutation(assemblyQualifiedClassName);
-            }
-
+            
             public IEnumerable<T> GeneratePermutations<T>()
             {
                 var assemblyQualifiedClassName = typeof(T).AssemblyQualifiedName;
@@ -234,10 +222,8 @@ namespace Pressius
 
                 var attributePermutations = new List<List<object>>();
                 propertyPermutationLists.GeneratePermutations(attributePermutations);
-
-                var attributePermutationsMinimal = propertyPermutationLists.GenerateMinimalPermutationsTakeTwo();
-
-                var results = attributePermutationsMinimal
+                
+                var results = attributePermutations
                     .Select(ap => Activator.CreateInstance(classType, ap.ToArray()));
 
                 return results;
@@ -270,11 +256,7 @@ namespace Pressius
                 }
 
                 var attributePermutations = new List<List<object>>();
-                //propertyPermutationLists.GeneratePermutations(attributePermutations);
-
-                ObjectPermutationExtension.GeneratePermutations(propertyPermutationLists, attributePermutations);
-
-                //attributePermutations = propertyPermutationLists.GenerateMinimalPermutationsTakeTwo();
+                propertyPermutationLists.GeneratePermutations(attributePermutations);
 
                 var results = new List<object>();
                 foreach (var permutationSet in attributePermutations)

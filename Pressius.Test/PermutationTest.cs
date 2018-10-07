@@ -37,5 +37,21 @@ namespace Pressius.Test
                 _output.WriteLine("Obj: {0} {1} {2} {3}", obj.Id, obj.Name, obj.Address, obj.Created);
             });
         }
+        
+        /// <summary>
+        /// Constructor permutator will take the first constructor it will find.
+        /// </summary>
+        [Fact]
+        public void PressiusTestObjectWithConstructor_ShouldPermutate()
+        {
+            var pressiusTestObjectList = Permutate.Generate<PressiusTestObjectWithConstructor>();
+            pressiusTestObjectList.ShouldNotBeNull();
+            pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+            });
+        }
     }
 }
