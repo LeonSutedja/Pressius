@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Leon Sutedja</Authors>
+    <Description>Pressius is a simple naive object generator.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SignAssembly>false</SignAssembly>
+    <RepositoryType>Github</RepositoryType>
+    <RepositoryUrl>https://github.com/LeonSutedja/Pressius</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/LeonSutedja/Pressius</PackageProjectUrl>
+    <Copyright>LeonSutedja</Copyright>
+    <PackageLicenseUrl>https://github.com/LeonSutedja/Pressius/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
 </Project>

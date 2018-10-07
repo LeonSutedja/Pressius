@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Pressius
 {
@@ -50,7 +49,7 @@ namespace Pressius
     ///     addedParameterDefinitions).ToList();
     ///
     /// </summary>
-    public class Permutate
+    public class Pressius
     {
         public static IEnumerable<T> Generate<T>()
         {
@@ -73,18 +72,18 @@ namespace Pressius
 
         private MutatorFactory _mutatorFactory { get; }
 
-        public Permutate()
+        public Pressius()
         {
             _mutatorFactory = new MutatorFactory();
         }
 
-        public Permutate AddParameterDefinition(IParameterDefinition parameterDefinition)
+        public Pressius AddParameterDefinition(IParameterDefinition parameterDefinition)
         {
             _mutatorFactory.AddParameterDefinition(parameterDefinition);
             return this;
         }
 
-        public Permutate AddObjectDefinition(IObjectDefinition objectDefinition)
+        public Pressius AddObjectDefinition(IObjectDefinition objectDefinition)
         {
             _mutatorFactory.AddObjectDefinition(objectDefinition);
             return this;
@@ -99,7 +98,7 @@ namespace Pressius
         {
             private readonly List<IParameterDefinition> _inputDefinitions;
             private readonly List<IObjectDefinition> _objectDefinitions;
-            
+
             public MutatorFactory()
             {
                 _inputDefinitions = new List<IParameterDefinition>()
@@ -130,7 +129,7 @@ namespace Pressius
                 _inputDefinitions.AddRange(parameterDefinitions);
                 return this;
             }
-            
+
             public IEnumerable<T> GeneratePermutations<T>()
             {
                 var assemblyQualifiedClassName = typeof(T).AssemblyQualifiedName;
@@ -222,7 +221,7 @@ namespace Pressius
 
                 var attributePermutations = new List<List<object>>();
                 propertyPermutationLists.GeneratePermutations(attributePermutations);
-                
+
                 var results = attributePermutations
                     .Select(ap => Activator.CreateInstance(classType, ap.ToArray()));
 
