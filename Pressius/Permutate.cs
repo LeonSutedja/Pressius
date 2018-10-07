@@ -167,20 +167,20 @@ namespace Pressius
 
                 try
                 {
+                    // we try to generate the object by properties permutation.
+                    // If it fails, we will generate via constructor instead.
                     return _generatePropertiesPermutation(classType);
                 }
                 catch
                 {
-                    // swallow here
-                }
-
-                try
-                {
-                    return _generateConstructorPermutation(classType);
-                }
-                catch
-                {
-                    throw new Exception("Cannot automatically generate permutations. Please define object definition first");
+                    try
+                    {
+                        return _generateConstructorPermutation(classType);
+                    }
+                    catch
+                    {
+                        throw new Exception("Cannot automatically generate permutations. Please define object definition first");
+                    }
                 }
             }
 

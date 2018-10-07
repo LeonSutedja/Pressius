@@ -1,26 +1,11 @@
-using System;
 using System.Linq;
+using Pressius.Test.Model;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Pressius.Test
 {
-    public class PressiusTestObject
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-    }
-
-    public class PressiusTestObjectWithDatetime
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public DateTime Created { get; set; }
-    }
-
     public class PermutationTest
     {
         private readonly ITestOutputHelper output;
