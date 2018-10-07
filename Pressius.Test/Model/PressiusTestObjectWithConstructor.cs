@@ -19,6 +19,5 @@ namespace Pressius.Test.Model
             Name = name;
             Address = address;
         }
-
     }
 }
