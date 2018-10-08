@@ -1,3 +1,5 @@
+using System;
+
 namespace Pressius.Test.Model
 {
     public class PressiusTestObject

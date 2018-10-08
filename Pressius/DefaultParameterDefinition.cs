@@ -21,40 +21,32 @@ namespace Pressius
     {
         public override List<object> InputCatalogues =>
             new List<object> {
-                string.Empty,
-                "Normal String",
-                "~!@#$%&*()_+=-`\\][{}|;:,./?><'\"",
-                null
+                "The quick brown fox jumps over the lazy dog", // normal string
+                "1234567890 Cozy lummox gives smart squid who asks for job pen", // Alpha Numeric
+                string.Empty, // Empty string
+                "~!@#$%&*()_+=-`\\][{}|;:,./?><'\"", // Characters and symbols
+                null, // null value
+                new string('x', 1024 * 1024 / 2) // really long string
             };
 
         public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("String");
     }
-
-    public class EmailStringParameter : DefaultParameterDefinition
-    {
-        public override List<object> InputCatalogues =>
-            new List<object>
-            {
-                "A@a.com",
-                "Fake.Email@gmail.com"
-            };
-
-        public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("Email");
-
-        public override bool IsMatch(PropertyInfo propertyInfo)
-        {
-            var isString = propertyInfo.PropertyType.Name.Contains("String");
-            var isEmail = propertyInfo.Name.Contains("Email");
-            return isString && isEmail;
-        }
-    }
-
+    
     public class IntegerParameter : DefaultParameterDefinition
     {
         public override List<object> InputCatalogues =>
-            new List<object> { int.MinValue, 10, int.MaxValue };
+            new List<object> { 10, Int32.MinValue, Int32.MaxValue };
 
-        public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition(new List<string> { "Int32", "Int", "Int64" });
+        public override ParameterTypeDefinition TypeName 
+            => new ParameterTypeDefinition(new List<string> { "Int32", "Int" });
+    }
+    
+    public class DoubleParameter : DefaultParameterDefinition
+    {
+        public override List<object> InputCatalogues => new List<object>
+            { 0.1, Double.MaxValue, Double.MinValue };
+
+        public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("Double");
     }
 
     public class DateTimeParameter : DefaultParameterDefinition
@@ -63,13 +55,5 @@ namespace Pressius
             { DateTime.Now, DateTime.MinValue, DateTime.MaxValue };
 
         public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("DateTime");
-    }
-
-    public class DoubleParameter : DefaultParameterDefinition
-    {
-        public override List<object> InputCatalogues => new List<object>
-            { 0.1, Double.MaxValue, Double.MinValue };
-
-        public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("Double");
     }
 }

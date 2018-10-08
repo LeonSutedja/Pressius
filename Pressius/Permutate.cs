@@ -104,7 +104,6 @@ namespace Pressius
                 _inputDefinitions = new List<IParameterDefinition>()
                 {
                     new StringParameter(),
-                    new EmailStringParameter(),
                     new IntegerParameter(),
                     new DateTimeParameter(),
                     new DoubleParameter()
