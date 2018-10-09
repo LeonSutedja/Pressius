@@ -40,7 +40,16 @@ namespace Pressius
         public override ParameterTypeDefinition TypeName 
             => new ParameterTypeDefinition(new List<string> { "Int32", "Int" });
     }
-    
+
+    public class DecimalParameter : DefaultParameterDefinition
+    {
+        public override List<object> InputCatalogues =>
+            new List<object> { (decimal)0.0, decimal.MinValue, decimal.MaxValue, decimal.MinusOne, decimal.Zero, decimal.One };
+
+        public override ParameterTypeDefinition TypeName
+            => new ParameterTypeDefinition("Decimal");
+    }
+
     public class DoubleParameter : DefaultParameterDefinition
     {
         public override List<object> InputCatalogues => new List<object>

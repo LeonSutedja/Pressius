@@ -58,15 +58,22 @@ namespace Pressius
             return inputs;
         }
 
+        public static IEnumerable<T> GenerateWithConstructor<T>()
+        {
+            var inputGenerator = new MutatorFactory();
+            inputGenerator.WithConstructor();
+            var inputs = inputGenerator.GeneratePermutations<T>();
+            return inputs;
+        }
+
         public static IEnumerable<T> Generate<T>(
             IObjectDefinition objectDefinition,
             List<IParameterDefinition> parameterDefinitions)
         {
             var inputGenerator = new MutatorFactory();
-            var inputs = inputGenerator
-                .AddObjectDefinition(objectDefinition)
-                .AddParameterDefinitions(parameterDefinitions)
-                .GeneratePermutations<T>();
+            inputGenerator.AddObjectDefinition(objectDefinition);
+            inputGenerator.AddParameterDefinitions(parameterDefinitions);
+            var inputs = inputGenerator.GeneratePermutations<T>();
             return inputs;
         }
 
@@ -89,6 +96,12 @@ namespace Pressius
             return this;
         }
 
+        public Pressius WithConstructor()
+        {
+            _mutatorFactory.WithConstructor();
+            return this;
+        }
+
         public IEnumerable<T> GeneratePermutation<T>()
         {
             return _mutatorFactory.GeneratePermutations<T>();
@@ -98,36 +111,32 @@ namespace Pressius
         {
             private readonly List<IParameterDefinition> _inputDefinitions;
             private readonly List<IObjectDefinition> _objectDefinitions;
+            private bool _useConstructor;
 
             public MutatorFactory()
             {
-                _inputDefinitions = new List<IParameterDefinition>()
+                _inputDefinitions = new List<IParameterDefinition>
                 {
                     new StringParameter(),
                     new IntegerParameter(),
+                    new DecimalParameter(),
                     new DateTimeParameter(),
                     new DoubleParameter()
                 };
                 _objectDefinitions = new List<IObjectDefinition>();
+                _useConstructor = false;
             }
 
-            public MutatorFactory AddObjectDefinition(IObjectDefinition objectDefinition)
-            {
-                _objectDefinitions.Add(objectDefinition);
-                return this;
-            }
+            public void AddObjectDefinition(IObjectDefinition objectDefinition)
+                => _objectDefinitions.Add(objectDefinition);
 
-            public MutatorFactory AddParameterDefinition(IParameterDefinition parameterDefinition)
-            {
-                _inputDefinitions.Add(parameterDefinition);
-                return this;
-            }
+            public void AddParameterDefinition(IParameterDefinition parameterDefinition)
+                => _inputDefinitions.Add(parameterDefinition);
 
-            public MutatorFactory AddParameterDefinitions(List<IParameterDefinition> parameterDefinitions)
-            {
-                _inputDefinitions.AddRange(parameterDefinitions);
-                return this;
-            }
+            public void AddParameterDefinitions(List<IParameterDefinition> parameterDefinitions)
+                => _inputDefinitions.AddRange(parameterDefinitions);
+
+            public void WithConstructor() => _useConstructor = true;
 
             public IEnumerable<T> GeneratePermutations<T>()
             {
@@ -170,24 +179,11 @@ namespace Pressius
             private IEnumerable<object> _generatePermutation(string assemblyQualifiedClassName)
             {
                 var classType = Type.GetType(assemblyQualifiedClassName);
-
-                try
+                if (_useConstructor)
                 {
-                    // we try to generate the object by properties permutation.
-                    // If it fails, we will generate via constructor instead.
-                    return _generatePropertiesPermutation(classType);
+                    return _generateConstructorPermutation(classType);
                 }
-                catch
-                {
-                    try
-                    {
-                        return _generateConstructorPermutation(classType);
-                    }
-                    catch
-                    {
-                        throw new Exception("Cannot automatically generate permutations. Please define object definition first");
-                    }
-                }
+                return _generatePropertiesPermutation(classType);
             }
 
             private IEnumerable<object> _generateConstructorPermutation(
@@ -236,7 +232,13 @@ namespace Pressius
                 foreach (var prop in listOfProperties)
                 {
                     var inputDefinitionType = string.Empty;
-                    if (objectDefinition == null)
+                    if (prop.PropertyType.IsGenericType &&
+                        prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        var propertyType = prop.PropertyType.GetGenericArguments().First();
+                        inputDefinitionType = propertyType.Name;
+                    }
+                    else if (objectDefinition == null)
                     {
                         inputDefinitionType = prop.PropertyType.Name;
                     }

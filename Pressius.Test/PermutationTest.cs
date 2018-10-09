@@ -22,20 +22,9 @@ namespace Pressius.Test
             var objectList = pressiusTestObjectList.ToList();
             objectList.ForEach(obj =>
             {
-                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
-            });
-        }
-
-        [Fact]
-        public void PressiusTestObjectWithDatetime_ShouldPermutate()
-        {
-            var testObjectList = Pressius.Generate<PressiusTestObjectWithDatetime>();
-            testObjectList.ShouldNotBeNull();
-            testObjectList.ToList().Count.ShouldBeGreaterThan(0);
-            var objectList = testObjectList.ToList();
-            objectList.ForEach(obj =>
-            {
-                _output.WriteLine("Obj: {0} {1} {2} {3}", obj.Id, obj.Name, obj.Address, obj.Created);
+                _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5}", 
+                    obj.Id, obj.Name, obj.Address,
+                    obj.NullableInteger, obj.DecimalValues, obj.Created);
             });
         }
         
@@ -45,7 +34,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestObjectWithConstructor_ShouldPermutate()
         {
-            var pressiusTestObjectList = Pressius.Generate<PressiusTestObjectWithConstructor>();
+            var pressiusTestObjectList = Pressius.GenerateWithConstructor<PressiusTestObjectWithConstructor>();
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();

@@ -11,9 +11,9 @@ This is the class that we want to permutate:
 
 	public class PressiusTestObject
 	{
-    		public int Id { get; set; }
-    		public string Name { get; set; }
-    		public string Address { get; set; }
+			public int Id { get; set; }
+			public string Name { get; set; }
+			public string Address { get; set; }
 	}
 
 To permutate, simply call:
@@ -57,7 +57,7 @@ To bind them all together, the following is a sample usage:
 		addedParameterDefinitions)
 		.ToList();
 	
-Or, we can also do like:
+Or, the following will also works:
 
 	var pressius = new Pressius();
 	var permutations = pressius
@@ -88,4 +88,32 @@ For example, the following object will be constructed, using the first construct
 			Address = address;
 		}
 	}
+	
+Nullable value is supported. For example, a class that contains:
 
+	public int? Id { get; set; }
+
+will use the integer type generator.
+
+The permutation will generate a minimum permutation that will use all the values at least once.
+For example, consider the following attributes set:
+[1, 2, 3]
+["", "abc", "xyz"]
+[78, 77]
+
+will generate the following:
+[1, "", 78]
+[1, "", 77"]
+[1, "abc", 78]
+[1, "xyz", 78]
+[2, "", 78]
+[3, "", 78]
+
+This is to keep the list of the objects minimal, whilst still able to test all the values.
+
+Current default types:
+Int32 / int
+string
+DateTime
+decimal
+double

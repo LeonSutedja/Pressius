@@ -14,6 +14,7 @@ Sample usage can be seen in: https://github.com/LeonSutedja/Pressius</Descriptio
     <PackageLicenseUrl>https://github.com/LeonSutedja/Pressius/blob/master/LICENSE</PackageLicenseUrl>
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
