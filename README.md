@@ -97,17 +97,17 @@ will use the integer type generator.
 
 The permutation will generate a minimum permutation that will use all the values at least once.
 For example, consider the following attributes set:
-[1, 2, 3]
-["", "abc", "xyz"]
-[78, 77]
+	[1, 2, 3]
+	["", "abc", "xyz"]
+	[78, 77]
 
 will generate the following:
-[1, "", 78]
-[1, "", 77"]
-[1, "abc", 78]
-[1, "xyz", 78]
-[2, "", 78]
-[3, "", 78]
+	[1, "", 78]
+	[1, "", 77"]
+	[1, "abc", 78]
+	[1, "xyz", 78]
+	[2, "", 78]
+	[3, "", 78]
 
 This is to keep the list of the objects minimal, whilst still able to test all the values.
 
