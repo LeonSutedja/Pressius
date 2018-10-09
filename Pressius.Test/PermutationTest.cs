@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Pressius.Test.Model;
 using Shouldly;
@@ -49,14 +50,20 @@ namespace Pressius.Test
             var pressiusInputs = Pressius.Generate<PressiusTestObject>().ToList();
             foreach (var input in pressiusInputs)
             {
-                yield return new object[] { input.Id, input.Name, input.Address };
+                yield return new object[]
+                {
+                    input.Id, input.Name, input.Address,
+                    input.NullableInteger, input.DecimalValues, input.Created
+                };
             }
         }
         [Theory]
         [MemberData("ValidPressiusTestObject")]
-        public void PressiusTestObject_ShouldBeCreated(int id, string name, string address)
+        public void PressiusTestObject_ShouldBeCreated(int id, string name, string address,
+            int? nullableInteger, decimal decimalValues, DateTime created)
         {
-            _output.WriteLine("Obj: {0} {1} {2}", id, name, address);
+            _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5}", id, name, address, nullableInteger,
+                decimalValues, created);
         }
     }
 }
