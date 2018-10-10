@@ -12,9 +12,9 @@ Sample usage can be seen in: https://github.com/LeonSutedja/Pressius</Descriptio
     <PackageProjectUrl>https://github.com/LeonSutedja/Pressius</PackageProjectUrl>
     <Copyright>LeonSutedja</Copyright>
     <PackageLicenseUrl>https://github.com/LeonSutedja/Pressius/blob/master/LICENSE</PackageLicenseUrl>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
 </Project>

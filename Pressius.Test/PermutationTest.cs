@@ -17,15 +17,15 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestObject_ShouldPermutate()
         {
-            var pressiusTestObjectList = Pressius.Generate<PressiusTestObject>();
+            var pressiusTestObjectList = PressiusPermutator.Generate<PressiusTestObject>();
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
             objectList.ForEach(obj =>
             {
-                _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5}", 
+                _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5} {6}", 
                     obj.Id, obj.Name, obj.Address,
-                    obj.NullableInteger, obj.DecimalValues, obj.Created);
+                    obj.NullableInteger, obj.DecimalValue, obj.BooleanValue, obj.Created);
             });
         }
         
@@ -35,7 +35,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestObjectWithConstructor_ShouldPermutate()
         {
-            var pressiusTestObjectList = Pressius.GenerateWithConstructor<PressiusTestObjectWithConstructor>();
+            var pressiusTestObjectList = PressiusPermutator.GenerateWithConstructor<PressiusTestObjectWithConstructor>();
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
@@ -47,23 +47,23 @@ namespace Pressius.Test
 
         public static IEnumerable<object[]> ValidPressiusTestObject()
         {
-            var pressiusInputs = Pressius.Generate<PressiusTestObject>().ToList();
+            var pressiusInputs = PressiusPermutator.Generate<PressiusTestObject>().ToList();
             foreach (var input in pressiusInputs)
             {
                 yield return new object[]
                 {
                     input.Id, input.Name, input.Address,
-                    input.NullableInteger, input.DecimalValues, input.Created
+                    input.NullableInteger, input.DecimalValue, input.BooleanValue, input.Created
                 };
             }
         }
         [Theory]
         [MemberData("ValidPressiusTestObject")]
         public void PressiusTestObject_ShouldBeCreated(int id, string name, string address,
-            int? nullableInteger, decimal decimalValues, DateTime created)
+            int? nullableInteger, decimal decimalValues, bool booleanValues, DateTime created)
         {
-            _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5}", id, name, address, nullableInteger,
-                decimalValues, created);
+            _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5} {6}", id, name, address, nullableInteger,
+                decimalValues, booleanValues, created);
         }
     }
 }

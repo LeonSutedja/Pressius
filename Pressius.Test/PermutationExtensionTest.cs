@@ -62,7 +62,7 @@ namespace Pressius.Test
         {
             var addedParameterDefinitions =
                 new List<IParameterDefinition> { new ValidLocation() };
-            var pressiusTestObjectList = Pressius.Generate<PressiusTestObject>(
+            var pressiusTestObjectList = PressiusPermutator.Generate<PressiusTestObject>(
                 new PressiusTestObjectObjectDefinition(),
                 addedParameterDefinitions).ToList();
             pressiusTestObjectList.ShouldNotBeNull();
@@ -77,7 +77,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestObject_ShouldPermutate()
         {
-            var pressius = new Pressius();
+            var pressius = new PressiusPermutator();
             var pressiusTestObjectList = pressius
                 .AddParameterDefinition(new ValidLocation())
                 .AddParameterDefinition(new IntegerGuid())

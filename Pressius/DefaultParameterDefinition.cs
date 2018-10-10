@@ -65,4 +65,12 @@ namespace Pressius
 
         public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("DateTime");
     }
+    
+    public class BooleanParameter : DefaultParameterDefinition
+    {
+        public override List<object> InputCatalogues => new List<object>
+            { true, false };
+
+        public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("Boolean");
+    }
 }

@@ -49,7 +49,7 @@ namespace Pressius
     ///     addedParameterDefinitions).ToList();
     ///
     /// </summary>
-    public class Pressius
+    public class PressiusPermutator
     {
         public static IEnumerable<T> Generate<T>()
         {
@@ -79,24 +79,24 @@ namespace Pressius
 
         private MutatorFactory _mutatorFactory { get; }
 
-        public Pressius()
+        public PressiusPermutator()
         {
             _mutatorFactory = new MutatorFactory();
         }
 
-        public Pressius AddParameterDefinition(IParameterDefinition parameterDefinition)
+        public PressiusPermutator AddParameterDefinition(IParameterDefinition parameterDefinition)
         {
             _mutatorFactory.AddParameterDefinition(parameterDefinition);
             return this;
         }
 
-        public Pressius AddObjectDefinition(IObjectDefinition objectDefinition)
+        public PressiusPermutator AddObjectDefinition(IObjectDefinition objectDefinition)
         {
             _mutatorFactory.AddObjectDefinition(objectDefinition);
             return this;
         }
 
-        public Pressius WithConstructor()
+        public PressiusPermutator WithConstructor()
         {
             _mutatorFactory.WithConstructor();
             return this;
@@ -120,6 +120,7 @@ namespace Pressius
                     new StringParameter(),
                     new IntegerParameter(),
                     new DecimalParameter(),
+                    new BooleanParameter(),
                     new DateTimeParameter(),
                     new DoubleParameter()
                 };

@@ -5,7 +5,7 @@ namespace Pressius
 {
     public class ParameterTypeDefinition
     {
-        public List<string> NameList { get; private set; }
+        public List<string> NameList { get; }
 
         public ParameterTypeDefinition(string name)
         {
