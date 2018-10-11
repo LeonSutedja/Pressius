@@ -17,7 +17,7 @@ This is the class that we want to permutate:
 	}
 
 To permutate, simply call:
-var permutationList = PressiusPermutator.Generate<PressiusTestObject>().ToList();
+var permutationList = Permutor.Generate<PressiusTestObject>().ToList();
 
 Pressius is easily extendable. The extension points are able to provide more definition in the test cases.
 To extend the function with a custom input values to be mutated, a class extended from PropertiesObjectDefinition<T> is required.
@@ -52,14 +52,14 @@ To bind them all together, the following is a sample usage:
 	{
     		new ValidLocation()
 	};
-	var pressiusInputs = PressiusPermutator.Generate<PressiusTestObject>(
+	var pressiusInputs = Permutor.Generate<PressiusTestObject>(
 		new PressiusTestObjectObjectDefinition(),
 		addedParameterDefinitions)
 		.ToList();
 	
 Or, the following will also works:
 
-	var pressius = new PressiusPermutator();
+	var pressius = new Permutor();
 	var permutations = pressius
    		.AddParameterDefinition(new ValidLocation())
    		.AddObjectDefinition(new PressiusTestObjectObjectDefinition())
