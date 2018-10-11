@@ -16,7 +16,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestComplexObject_ShouldPermutate()
         {
-            var pressiusTestObjectList = new PressiusPermutator()
+            var pressiusTestObjectList = new Permutor()
                 .AddParameterDefinition(new PressiusTestObjectParameterDefinition())
                 .AddObjectDefinition(new PressiusTestComplexObjectDefinition())
                 .GeneratePermutation<PressiusTestComplexObject>();
@@ -33,7 +33,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestComplexObjectWithPressiusGeneratedObject_ShouldPermutate()
         {
-            var permutator = new PressiusPermutator();
+            var permutator = new Permutor();
             var pressiusTestObjectList = permutator.GeneratePermutation<PressiusTestObject>();
             var genericObjectList = new List<object>();
             genericObjectList.AddRange(pressiusTestObjectList);

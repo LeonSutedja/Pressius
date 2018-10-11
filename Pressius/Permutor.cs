@@ -8,7 +8,7 @@ namespace Pressius
     /// will generate a list of that object with a default string and integer values.
     ///
     /// Example basic usage:
-    /// var pressiusInputs = Permutate.Generate<T>().ToList();
+    /// var pressiusInputs = Permutor.Generate<T>().ToList();
     /// where T is the object type that aimed to be permutated.
     ///
     /// To extend the function with a custom input values to be mutated, a class extended from PropertiesObjectDefinition<T> is required.
@@ -42,12 +42,12 @@ namespace Pressius
     ///     new ValidRoomName(),
     ///     new ValidLocation()
     /// };
-    /// var pressiusInputs = Permutate.Generate<CreateRoomCommand>(
+    /// var pressiusInputs = Permutor.Generate<CreateRoomCommand>(
     ///     new CreateRoomCommandObjectDefinition(),
     ///     addedParameterDefinitions).ToList();
     ///
     /// </summary>
-    public class PressiusPermutator
+    public class Permutor
     {
         public static IEnumerable<T> Generate<T>()
         {
@@ -77,24 +77,24 @@ namespace Pressius
 
         private MutatorFactory _mutatorFactory { get; }
 
-        public PressiusPermutator()
+        public Permutor()
         {
             _mutatorFactory = new MutatorFactory();
         }
 
-        public PressiusPermutator AddParameterDefinition(IParameterDefinition parameterDefinition)
+        public Permutor AddParameterDefinition(IParameterDefinition parameterDefinition)
         {
             _mutatorFactory.AddParameterDefinition(parameterDefinition);
             return this;
         }
 
-        public PressiusPermutator AddObjectDefinition(IObjectDefinition objectDefinition)
+        public Permutor AddObjectDefinition(IObjectDefinition objectDefinition)
         {
             _mutatorFactory.AddObjectDefinition(objectDefinition);
             return this;
         }
 
-        public PressiusPermutator WithConstructor()
+        public Permutor WithConstructor()
         {
             _mutatorFactory.WithConstructor();
             return this;

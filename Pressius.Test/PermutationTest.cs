@@ -17,7 +17,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestObject_ShouldPermutate()
         {
-            var pressiusTestObjectList = PressiusPermutator.Generate<PressiusTestObject>();
+            var pressiusTestObjectList = Permutor.Generate<PressiusTestObject>();
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
@@ -35,7 +35,7 @@ namespace Pressius.Test
         [Fact]
         public void PressiusTestObjectWithConstructor_ShouldPermutate()
         {
-            var pressiusTestObjectList = PressiusPermutator.GenerateWithConstructor<PressiusTestObjectWithConstructor>();
+            var pressiusTestObjectList = Permutor.GenerateWithConstructor<PressiusTestObjectWithConstructor>();
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
@@ -47,7 +47,7 @@ namespace Pressius.Test
 
         public static IEnumerable<object[]> ValidPressiusTestObject()
         {
-            var pressiusInputs = PressiusPermutator.Generate<PressiusTestObject>().ToList();
+            var pressiusInputs = Permutor.Generate<PressiusTestObject>().ToList();
             foreach (var input in pressiusInputs)
             {
                 yield return new object[]
