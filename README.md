@@ -114,9 +114,10 @@ will generate the following:
 This is to keep the list of the objects minimal, whilst still able to test all the values.
 
 Current supported default types are:
-int
-string
-DateTime
-decimal
-double
-boolean
+
+	int
+	string
+	DateTime
+	decimal
+	double
+	boolean
