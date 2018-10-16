@@ -65,5 +65,19 @@ namespace Pressius.Test
             _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5} {6}", id, name, address, nullableInteger,
                 decimalValues, booleanValues, created);
         }
+
+        [Fact]
+        public void PressiusTestSimpleObjectWithPrivateSet_ShouldPermutate()
+        {
+            var pressiusObjectList = Permutor.Generate<PressiusTestSimpleObjectWithPrivateSet>();
+            pressiusObjectList.ShouldNotBeNull();
+            pressiusObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusObjectList.ToList();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}",
+                    obj.Id, obj.Name, obj.Address);
+            });
+        }
     }
 }
