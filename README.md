@@ -17,7 +17,8 @@ This is the class that we want to permutate:
 	}
 
 To permutate, simply call:
-var permutationList = Permutor.Generate<PressiusTestObject>().ToList();
+
+	var permutationList = Permutor.Generate<PressiusTestObject>().ToList();
 
 Pressius is easily extendable. The extension points are able to provide more definition in the test cases.
 To extend the function with a custom input values to be mutated, a class extended from PropertiesObjectDefinition<T> is required.
@@ -115,9 +116,30 @@ This is to keep the list of the objects minimal, whilst still able to test all t
 
 Current supported default types are:
 
-	int
-	string
+	int 
+		- 10, Int32.MinValue, Int32.MaxValue
+	string 
+		- "The quick brown fox jumps over the lazy dog" // normal string
+		- "1234567890 Cozy lummox gives smart squid who asks for job pen" // Alpha Numeric
+		- string.Empty // Empty string
+		- "~!@#$%&*()_+=-`\\][{}|;:,./?><'\"" // Characters and symbols
+		- null // null value
+		- new string('x', 1024 * 1024 / 2) // really long string
 	DateTime
+		- DateTime.Now
+		- DateTime.MinValue
+		- DateTime.MaxValue
 	decimal
+		- (decimal)0.0
+		- decimal.MinValue
+		- decimal.MaxValue
+		- decimal.MinusOne
+		- decimal.Zero
+		- decimal.One
 	double
+		- 0.1
+		- Double.MaxValue
+		- Double.MinValue
 	boolean
+		- true
+		- false
