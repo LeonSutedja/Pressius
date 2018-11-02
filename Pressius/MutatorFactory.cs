@@ -80,7 +80,10 @@ namespace Pressius
             Type classType,
             IObjectDefinition objectDefinition = null)
         {
+            // Default, get the first constructor.
             var classConstructors = classType.GetConstructors().FirstOrDefault();
+            if (classConstructors == null)
+                throw new Exception($"Cannot found any constructor for this class type: {classType.Name}");
             var listOfParameters = classConstructors.GetParameters();
 
             var propertyPermutationLists = new List<List<object>>();
@@ -103,7 +106,7 @@ namespace Pressius
                 var testInput = _parameterDefinitions.FirstOrDefault(
                     id => id.TypeName.Equals(inputDefinitionType))?.InputCatalogues;
                 if (testInput == null)
-                    throw new Exception("Cannot Found Matching Input Definition");
+                    throw new Exception($"Cannot Found Matching Definition for: { inputDefinitionType }, have you assign ObjectDefinition correctly?");
 
                 propertyPermutationLists.Add(testInput);
             }
@@ -141,8 +144,9 @@ namespace Pressius
 
                 var testInput = _parameterDefinitions.FirstOrDefault(
                     id => id.TypeName.Equals(inputDefinitionType))?.InputCatalogues;
+
                 if (testInput == null)
-                    throw new Exception("Cannot Found Matching Input Definition");
+                    throw new Exception($"Cannot Found Matching Definition for: { inputDefinitionType }, have you assign ObjectDefinition correctly?");
 
                 propertyPermutationLists.Add(testInput);
             }
@@ -154,7 +158,8 @@ namespace Pressius
             foreach (var permutationSet in attributePermutations)
             {
                 var constructor = classType.GetConstructor(Type.EmptyTypes);
-                if (constructor == null) throw new Exception("No parameterless constructor in the class.");
+                if (constructor == null)
+                    throw new Exception($"No parameterless constructor in the class: { classType.Name }. Please add parameterless constructor.");
                 var newInput = Activator.CreateInstance(classType);
                 for (var i = 0; i < listOfProperties.Length; i++)
                 {
