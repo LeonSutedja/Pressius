@@ -10,6 +10,8 @@ namespace Pressius
 
         public abstract ParameterTypeDefinition TypeName { get; }
 
+        public virtual bool CompareParamName => false;
+
         public virtual bool IsMatch(PropertyInfo propertyInfo)
             => TypeName.Equals(propertyInfo.PropertyType.Name);
 

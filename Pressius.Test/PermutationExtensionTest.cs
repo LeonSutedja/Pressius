@@ -80,8 +80,6 @@ namespace Pressius.Test
             var pressius = new Permutor();
             var pressiusTestObjectList = pressius
                 .AddParameterDefinition(new ValidLocation())
-                .AddParameterDefinition(new IntegerGuid())
-                .AddObjectDefinition(new PressiusTestObjectObjectDefinitionWithIntegerGuid())
                 .GeneratePermutation<PressiusTestObject>();
 
             pressiusTestObjectList.ShouldNotBeNull();

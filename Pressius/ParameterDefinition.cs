@@ -17,16 +17,8 @@ namespace Pressius
             NameList = nameList;
         }
 
-        public override bool Equals(object obj)
-        {
-            var stringObject = obj as string;
-            return stringObject != null ? NameList.Contains(stringObject) : base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return 116380930 + EqualityComparer<List<string>>.Default.GetHashCode(NameList);
-        }
+        public bool Equals(string obj)
+            => obj != null && NameList.Contains(obj);
     }
 
     public interface IParameterDefinition
@@ -34,6 +26,8 @@ namespace Pressius
         List<object> InputCatalogues { get; }
 
         ParameterTypeDefinition TypeName { get; }
+
+        bool CompareParamName { get; }
 
         bool IsMatch(PropertyInfo propertyInfo);
 

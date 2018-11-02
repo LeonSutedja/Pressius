@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pressius.Extensions;
 
 namespace Pressius
 {
     internal class MutatorFactory
     {
-        private readonly List<IParameterDefinition> _inputDefinitions;
+        private readonly List<IParameterDefinition> _parameterDefinitions;
         private readonly List<IObjectDefinition> _objectDefinitions;
         private bool _useConstructor;
 
         public MutatorFactory()
         {
-            _inputDefinitions = new List<IParameterDefinition>
+            _parameterDefinitions = new List<IParameterDefinition>
             {
                 new StringParameter(),
                 new IntegerParameter(),
@@ -29,10 +30,10 @@ namespace Pressius
             => _objectDefinitions.Add(objectDefinition);
 
         public void AddParameterDefinition(IParameterDefinition parameterDefinition)
-            => _inputDefinitions.Add(parameterDefinition);
+            => _parameterDefinitions.Add(parameterDefinition);
 
         public void AddParameterDefinitions(List<IParameterDefinition> parameterDefinitions)
-            => _inputDefinitions.AddRange(parameterDefinitions);
+            => _parameterDefinitions.AddRange(parameterDefinitions);
 
         public void WithConstructor() => _useConstructor = true;
 
@@ -86,11 +87,9 @@ namespace Pressius
             foreach (var param in listOfParameters)
             {
                 var inputDefinitionType = string.Empty;
-                if (param.ParameterType.IsGenericType &&
-                    param.ParameterType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (param.IsNullableParameter())
                 {
-                    var parameterType = param.ParameterType.GetGenericArguments().First();
-                    inputDefinitionType = parameterType.Name;
+                    inputDefinitionType = param.GetNullableParameterName();
                 }
                 else if (objectDefinition == null)
                 {
@@ -101,7 +100,7 @@ namespace Pressius
                     inputDefinitionType = param.ParameterType.Name;
                 }
 
-                var testInput = _inputDefinitions.FirstOrDefault(
+                var testInput = _parameterDefinitions.FirstOrDefault(
                     id => id.TypeName.Equals(inputDefinitionType))?.InputCatalogues;
                 if (testInput == null)
                     throw new Exception("Cannot Found Matching Input Definition");
@@ -127,11 +126,9 @@ namespace Pressius
             foreach (var prop in listOfProperties)
             {
                 var inputDefinitionType = string.Empty;
-                if (prop.PropertyType.IsGenericType &&
-                    prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (prop.IsNullableProperty())
                 {
-                    var propertyType = prop.PropertyType.GetGenericArguments().First();
-                    inputDefinitionType = propertyType.Name;
+                    inputDefinitionType = prop.GetNullablePropertyName();
                 }
                 else if (objectDefinition == null)
                 {
@@ -142,7 +139,7 @@ namespace Pressius
                     inputDefinitionType = prop.PropertyType.Name;
                 }
 
-                var testInput = _inputDefinitions.FirstOrDefault(
+                var testInput = _parameterDefinitions.FirstOrDefault(
                     id => id.TypeName.Equals(inputDefinitionType))?.InputCatalogues;
                 if (testInput == null)
                     throw new Exception("Cannot Found Matching Input Definition");
