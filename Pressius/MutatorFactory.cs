@@ -152,20 +152,45 @@ namespace Pressius
                 IObjectDefinition objectDefinition)
             {
                 var propertyPermutationLists = new List<List<object>>();
+                var attributeParameterNameDefinitions = parameterDefinitions.Where(pd => pd.CompareParamName).ToList();
                 foreach (var prop in propertyInfos)
                 {
                     var inputDefinitionType = string.Empty;
+
                     if (prop.IsNullableProperty())
                     {
                         inputDefinitionType = prop.GetNullablePropertyName();
                     }
                     else if (objectDefinition == null)
                     {
-                        inputDefinitionType = prop.PropertyType.Name;
+                        // when there is no object definition, we will check if there is
+                        // an attribute parameter name definition that matches with the prop name.
+                        // otherwise, we will assign the default prop.PropertyType.Name value
+                        if (attributeParameterNameDefinitions.Any(pd => pd.TypeName.Equals(prop.Name)))
+                        {
+                            inputDefinitionType = attributeParameterNameDefinitions
+                                .First(pd => pd.TypeName.Equals(prop.Name)).TypeName.NameList.First();
+                        }
+                        else
+                        {
+                            inputDefinitionType = prop.PropertyType.Name;
+                        }
                     }
                     else if (!objectDefinition.MatcherDictionary.TryGetValue(prop.Name, out inputDefinitionType))
                     {
-                        inputDefinitionType = prop.PropertyType.Name;
+                        // when there is an object definition and cannot be matched, 
+                        // we will check if there is an attribute parameter name definition 
+                        // that matches with the prop name.
+                        // otherwise, we will assign the default prop.PropertyType.Name value
+                        if (attributeParameterNameDefinitions.Any(pd => pd.TypeName.Equals(prop.Name)))
+                        {
+                            inputDefinitionType = attributeParameterNameDefinitions
+                                .First(pd => pd.TypeName.Equals(prop.Name)).TypeName.NameList.First();
+                        }
+                        else
+                        {
+                            inputDefinitionType = prop.PropertyType.Name;
+                        }
                     }
 
                     var testInput = parameterDefinitions.FirstOrDefault(
