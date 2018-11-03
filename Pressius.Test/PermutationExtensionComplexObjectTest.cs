@@ -2,6 +2,7 @@ using Pressius.Test.Model;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
+using Pressius.Test.Shared;
 using Xunit;
 using Xunit.Abstractions;
 

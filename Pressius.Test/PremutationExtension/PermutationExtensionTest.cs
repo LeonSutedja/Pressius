@@ -1,11 +1,12 @@
 using Pressius.Test.Model;
+using Pressius.Test.Shared;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Pressius.Test
+namespace Pressius.Test.PremutationExtension
 {
     public class PressiusTestObjectObjectDefinition
         : PropertiesObjectDefinition<PressiusTestObject>

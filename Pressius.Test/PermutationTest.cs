@@ -3,6 +3,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pressius.Test.Shared;
 using Xunit;
 using Xunit.Abstractions;
 

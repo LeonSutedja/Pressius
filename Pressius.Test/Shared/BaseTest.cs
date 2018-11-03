@@ -1,6 +1,6 @@
 using Xunit.Abstractions;
 
-namespace Pressius.Test
+namespace Pressius.Test.Shared
 {
     public abstract class BaseTest
     {
