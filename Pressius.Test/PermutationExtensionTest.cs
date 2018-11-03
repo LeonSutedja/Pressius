@@ -141,5 +141,52 @@ namespace Pressius.Test
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
             });
         }
+
+        [Fact]
+        public void PressiusTestObject_WithValidNameAndConstructorPermutation_ShouldPermutateWithCustomValues()
+        {
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .AddParameterDefinition(new ValidName())
+                .AddObjectDefinition(new PressiusTestObjectWithConstructorObjectDefinition())
+                .WithConstructor()
+                .GeneratePermutation<PressiusTestObjectWithConstructor>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusTestObjectList.ToList();
+            var integerParams = new IntegerParameter();
+            var validName = new ValidName();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Address.ShouldBe("Default Address");
+                validName.InputCatalogues.ShouldContain(obj.Name);
+            });
+        }
+
+        public class PressiusTestObjectWithConstructorObjectDefinition
+            : PropertiesObjectDefinition<PressiusTestObjectWithConstructor>
+        {
+            public override Dictionary<string, string> MatcherDictionary =>
+                new Dictionary<string, string>
+                {
+                    { "name", "ValidName" }
+                };
+        }
+
+        public class ValidName : DefaultParameterDefinition
+        {
+            public override List<object> InputCatalogues =>
+                new List<object> {
+                    "Clark Kent",
+                    "Bruce Wayne",
+                    "Barry Allen"
+                };
+
+            public override ParameterTypeDefinition TypeName =>
+                new ParameterTypeDefinition("ValidName");
+        }
     }
 }

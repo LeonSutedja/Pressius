@@ -49,7 +49,9 @@ namespace Pressius
         {
             var objectDefinition = _objectDefinitions.FirstOrDefault(
                 od => string.Compare(od.AssemblyQualifiedClassName, assemblyQualifiedClassName) == 0);
-            return objectDefinition != null ? _generatePermutationBasedOnObjectDefinition(objectDefinition, assemblyQualifiedClassName) : _generatePermutation(assemblyQualifiedClassName);
+            return objectDefinition != null ? 
+                _generatePermutationBasedOnObjectDefinition(objectDefinition, assemblyQualifiedClassName) : 
+                _generatePermutation(assemblyQualifiedClassName);
         }
 
         private IEnumerable<object> _generatePermutationBasedOnObjectDefinition(
@@ -58,17 +60,9 @@ namespace Pressius
         {
             var classType = Type.GetType(assemblyQualifiedClassName);
 
-            var objectInitiation = objectDefinition.InitiationMethod;
-            if (objectInitiation == ObjectInitiation.Constructor)
-            {
-                return _generateConstructorPermutation(classType, objectDefinition);
-            }
-            if (objectInitiation == ObjectInitiation.Properties)
-            {
-                return _generatePropertiesPermutation(classType, objectDefinition);
-            }
-
-            throw new Exception("Cannot find object initiation");
+            return _useConstructor
+                ? _generateConstructorPermutation(classType, objectDefinition) 
+                : _generatePropertiesPermutation(classType, objectDefinition);
         }
 
         private IEnumerable<object> _generatePermutation(string assemblyQualifiedClassName)
