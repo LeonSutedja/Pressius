@@ -3,69 +3,13 @@ using Pressius.Test.Shared;
 using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
+using Pressius.Test.PremutationExtension.Model;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Pressius.Test.PremutationExtension
 {
-    public class PressiusTestObjectObjectDefinition
-        : PropertiesObjectDefinition<PressiusTestObject>
-    {
-        public override Dictionary<string, string> MatcherDictionary =>
-            new Dictionary<string, string>
-            {
-                { "Address", "ValidLocation" }
-            };
-    }
-
-    public class PressiusTestObjectObjectDefinitionWithIntegerGuid
-        : PropertiesObjectDefinition<PressiusTestObject>
-    {
-        public override Dictionary<string, string> MatcherDictionary =>
-            new Dictionary<string, string>
-            {
-                { "Address", "ValidLocation" },
-                { "Id", "IntegerGuid" }
-            };
-    }
-
-    public class IntegerGuid : DefaultParameterDefinition
-    {
-        public override List<object> InputCatalogues =>
-            new List<object> {
-                1531,
-                9975
-            };
-
-        public override ParameterTypeDefinition TypeName =>
-            new ParameterTypeDefinition("IntegerGuid");
-    }
-
-    public class ValidLocation : DefaultParameterDefinition
-    {
-        public override List<object> InputCatalogues =>
-            new List<object> {
-               "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
-               "111 St Kilda, VIC 3004, Melbourne, Australia" };
-
-        public override ParameterTypeDefinition TypeName =>
-            new ParameterTypeDefinition("ValidLocation");
-    }
-
-    public class ValidLocationWithAttribute : DefaultParameterDefinition
-    {
-        public override List<object> InputCatalogues =>
-            new List<object> {
-                "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
-                "111 St Kilda, VIC 3004, Melbourne, Australia" };
-
-        public override ParameterTypeDefinition TypeName =>
-            new ParameterTypeDefinition("Address");
-
-        public override bool CompareParamName => true;
-    }
-
-    public class PermutationExtensionTest : BaseTest
+    public partial class PermutationExtensionTest : BaseTest
     {
         public PermutationExtensionTest(ITestOutputHelper output) : base(output)
         {
@@ -165,29 +109,6 @@ namespace Pressius.Test.PremutationExtension
                 obj.Address.ShouldBe("Default Address");
                 validName.InputCatalogues.ShouldContain(obj.Name);
             });
-        }
-
-        public class PressiusTestObjectWithConstructorObjectDefinition
-            : PropertiesObjectDefinition<PressiusTestObjectWithConstructor>
-        {
-            public override Dictionary<string, string> MatcherDictionary =>
-                new Dictionary<string, string>
-                {
-                    { "name", "ValidName" }
-                };
-        }
-
-        public class ValidName : DefaultParameterDefinition
-        {
-            public override List<object> InputCatalogues =>
-                new List<object> {
-                    "Clark Kent",
-                    "Bruce Wayne",
-                    "Barry Allen"
-                };
-
-            public override ParameterTypeDefinition TypeName =>
-                new ParameterTypeDefinition("ValidName");
         }
     }
 }
