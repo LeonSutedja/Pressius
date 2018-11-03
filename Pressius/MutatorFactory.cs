@@ -246,17 +246,34 @@ namespace Pressius
                 foreach (var param in listOfParameters)
                 {
                     var inputDefinitionType = string.Empty;
+                    var attributeParameterNameDefinitions = parameterDefinitions.Where(pd => pd.CompareParamName).ToList();
                     if (param.IsNullableParameter())
                     {
                         inputDefinitionType = param.GetNullableParameterName();
                     }
                     else if (objectDefinition == null)
                     {
-                        inputDefinitionType = param.ParameterType.Name;
+                        if (attributeParameterNameDefinitions.Any(pd => pd.TypeName.Equals(param.Name)))
+                        {
+                            inputDefinitionType = attributeParameterNameDefinitions
+                                .First(pd => pd.TypeName.Equals(param.Name)).TypeName.NameList.First();
+                        }
+                        else
+                        {
+                            inputDefinitionType = param.ParameterType.Name;
+                        }
                     }
                     else if (!objectDefinition.MatcherDictionary.TryGetValue(param.Name, out inputDefinitionType))
                     {
-                        inputDefinitionType = param.ParameterType.Name;
+                        if (attributeParameterNameDefinitions.Any(pd => pd.TypeName.Equals(param.Name)))
+                        {
+                            inputDefinitionType = attributeParameterNameDefinitions
+                                .First(pd => pd.TypeName.Equals(param.Name)).TypeName.NameList.First();
+                        }
+                        else
+                        {
+                            inputDefinitionType = param.ParameterType.Name;
+                        }
                     }
 
                     var testInput = parameterDefinitions.FirstOrDefault(

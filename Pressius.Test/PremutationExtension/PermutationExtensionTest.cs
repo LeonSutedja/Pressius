@@ -110,5 +110,28 @@ namespace Pressius.Test.PremutationExtension
                 validName.InputCatalogues.ShouldContain(obj.Name);
             });
         }
+
+        [Fact]
+        public void PressiusTestObject_WithValidNameConstructorAndNoObjectDefinition_ShouldPermutateWithCustomValues()
+        {
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .AddParameterDefinition(new ValidNameWithCompareParamName())
+                .WithConstructor()
+                .GeneratePermutation<PressiusTestObjectWithConstructor>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusTestObjectList.ToList();
+            var integerParams = new IntegerParameter();
+            var validName = new ValidNameWithCompareParamName();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Address.ShouldBe("Default Address");
+                validName.InputCatalogues.ShouldContain(obj.Name);
+            });
+        }
     }
 }
