@@ -68,9 +68,16 @@ namespace Pressius.Test
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
+
+            var integerParams = new IntegerParameter();
+            var stringParams = new StringParameter();
+            var validLocation = new ValidLocation();
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                validLocation.InputCatalogues.ShouldContain(obj.Address);
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
             });
         }
 
@@ -80,14 +87,22 @@ namespace Pressius.Test
             var pressius = new Permutor();
             var pressiusTestObjectList = pressius
                 .AddParameterDefinition(new ValidLocation())
+                .AddParameterDefinition(new IntegerGuid())
+                .AddObjectDefinition(new PressiusTestObjectObjectDefinitionWithIntegerGuid())
                 .GeneratePermutation<PressiusTestObject>();
 
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
+            var integerGuid = new IntegerGuid();
+            var stringParams = new StringParameter();
+            var validLocation = new ValidLocation();
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                integerGuid.InputCatalogues.ShouldContain(obj.Id);
+                validLocation.InputCatalogues.ShouldContain(obj.Address);
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
             });
         }
     }
