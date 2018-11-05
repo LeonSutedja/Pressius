@@ -1,5 +1,10 @@
 # Pressius
-Pressius is a naive object creator permutation for test purpose.
+Release notes 1.0.3
+- Fixes issues with constructor permutation
+- Added 'CompareParamName' attributes in the parameter definition. When this is set to true, the parameter definition will be compared to attribute name by default. 
+With CompareParamName attribute, object definition class is not needed. Pressius takes precedence of the attribute names over the object definition.
+
+Pressius is a naive object creator permutator intended to help with unit tests.
 
 Pressius is an extensible object permutation
 For example, a class object that contains 2 attributes of a string and an integer
@@ -18,8 +23,10 @@ This is the class that we want to permutate:
 
 To permutate, simply call:
 
-	var permutationList = Permutor.Generate<PressiusTestObject>().ToList();
+	var permutationList = Permutor.Generate<PressiusTestObject>();
 
+Example with extension:
+	
 Pressius is easily extendable. The extension points are able to provide more definition in the test cases.
 To extend the function with a custom input values to be mutated, a class extended from PropertiesObjectDefinition<T> is required.
 This is where T is the type of the object to be mutated. Example of the function is below.
@@ -65,7 +72,9 @@ Or, the following will also works:
    		.AddParameterDefinition(new ValidLocation())
    		.AddObjectDefinition(new PressiusTestObjectObjectDefinition())
    		.GeneratePermutation<PressiusTestObject>();
-   
+		
+Example with constructor:		
+
 Object Constructor is also supported.
 For example, the following object will be constructed, using the first constructor it finds.
 
@@ -143,3 +152,34 @@ Current supported default types are:
 	boolean
 		- true
 		- false
+		
+** New release 1.0.3 **
+
+Compare with the attributes name:
+
+Release 1.0.3 contains CompareParamName variable which can be set in the parameter definition.
+Once this is set, the permutation will take this, and tries to compare to the attribute name by default.
+
+An example is like below:
+
+    public class ValidNameWithCompareParamName : DefaultParameterDefinition
+    {
+        public override List<object> InputCatalogues =>
+            new List<object> {
+                "Clark Kent",
+                "Bruce Wayne",
+                "Barry Allen"
+            };
+
+        public override ParameterTypeDefinition TypeName =>
+            new ParameterTypeDefinition("name");
+
+        public override bool CompareParamName => true;
+    }
+	
+This allows to ommit object definition class, and we can permutate with the following:
+
+	var pressius = new Permutor();
+	var pressiusTestObjectList = pressius
+		.AddParameterDefinition(new ValidNameWithCompareParamName())
+		.GeneratePermutation<PressiusTestObjectWithConstructor>();
