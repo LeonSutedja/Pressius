@@ -1,6 +1,6 @@
 # Pressius
 
-## Release notes 1.0.3
+## Release Notes 1.0.3
 - Fixes issues with constructor permutation
 - Added 'CompareParamName' attributes in the parameter definition. When this is set to true, the parameter definition will be compared to attribute name by default. With CompareParamName attribute, object definition class is not needed. Pressius takes precedence of the attribute names over the object definition.
 
@@ -103,7 +103,7 @@ For example, the following object will be constructed, using the first construct
 
 ### Example to compare with attribute name
 
-** New in 1.0.3 **
+**New in 1.0.3**
 
 Release 1.0.3 contains CompareParamName variable which can be set in the parameter definition.
 Once this is set, the permutation will take this, and tries to compare to the attribute name by default.
@@ -140,7 +140,7 @@ Nullable value is supported. For example, a class that contains:
 
 will use the integer type generator.
 
-### What algorithm does pressius use to permutates?
+### Pressius Algorithm
 
 The permutation will generate a minimum permutation that will use all the values at least once.
 For example, consider the following attributes set:
@@ -160,34 +160,36 @@ will generate the following:
 
 This is to keep the list of the objects minimal, whilst still able to test all the values.
 
-### Default types and default values
+### Default Types and Values
 
 Current supported default types are:
 
-	* int 
-		- 10, Int32.MinValue, Int32.MaxValue
-	* string 
-		- "The quick brown fox jumps over the lazy dog" // normal string
-		- "1234567890 Cozy lummox gives smart squid who asks for job pen" // Alpha Numeric
-		- string.Empty // Empty string
-		- "~!@#$%&*()_+=-`\\][{}|;:,./?><'\"" // Characters and symbols
-		- null // null value
-		- new string('x', 1024 * 1024 / 2) // really long string
-	* DateTime
-		- DateTime.Now
-		- DateTime.MinValue
-		- DateTime.MaxValue
-	* decimal
-		- (decimal)0.0
-		- decimal.MinValue
-		- decimal.MaxValue
-		- decimal.MinusOne
-		- decimal.Zero
-		- decimal.One
-	* double
-		- 0.1
-		- Double.MaxValue
-		- Double.MinValue
-	* boolean
-		- true
-		- false
+* int 
+  - 10 
+  - Int32.MinValue
+  - Int32.MaxValue
+* string 
+  - "The quick brown fox jumps over the lazy dog" // normal string
+  - "1234567890 Cozy lummox gives smart squid who asks for job pen" // Alpha Numeric
+  - string.Empty // Empty string
+  - "~!@#$%&*()_+=-`\\][{}|;:,./?><'\"" // Characters and symbols
+  - null // null value
+  - new string('x', 1024 * 1024 / 2) // really long string
+* DateTime
+  - DateTime.Now
+  - DateTime.MinValue
+  - DateTime.MaxValue
+* decimal
+  - (decimal)0.0
+  - decimal.MinValue
+  - decimal.MaxValue
+  - decimal.MinusOne
+  - decimal.Zero
+  - decimal.One
+* double
+  - 0.1
+  - Double.MaxValue
+  - Double.MinValue
+* boolean
+  - true
+  - false
