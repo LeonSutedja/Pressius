@@ -1,4 +1,4 @@
-namespace Pressius.Test.Model
+namespace Pressius.Test.PermutationExtension.Model
 {
     public enum Counter
     {

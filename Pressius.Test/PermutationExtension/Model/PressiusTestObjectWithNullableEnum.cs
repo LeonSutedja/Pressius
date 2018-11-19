@@ -1,3 +1,5 @@
+using Pressius.Test.PermutationExtension.Model;
+
 namespace Pressius.Test.Model
 {
     public class PressiusTestObjectWithNullableEnum
