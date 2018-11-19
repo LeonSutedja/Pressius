@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Pressius.Test.Model;
 
-namespace Pressius.Test.PremutationExtension.Model
+namespace Pressius.Test.PermutationExtension.Model
 {
     public class PressiusTestObjectObjectDefinitionWithIntegerGuid
         : PropertiesObjectDefinition<PressiusTestObject>

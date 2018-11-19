@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Pressius.Test.PremutationExtension.Model
+namespace Pressius.Test.PermutationExtension.Model
 {
     public class ValidLocationWithAttribute : DefaultParameterDefinition
     {

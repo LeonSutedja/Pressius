@@ -3,6 +3,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pressius.Test.PermutationExtension.Model;
 using Pressius.Test.Shared;
 using Xunit;
 using Xunit.Abstractions;
@@ -108,18 +109,18 @@ namespace Pressius.Test
         }
 
         [Fact]
-        public void PressiusTestObjectWithEnumerator_ShouldPermutate()
+        public void PressiusTestObjectWithEnum_ShouldPermutate()
         {
             var permutor = new Permutor();
             var pressiusTestObjectList = permutor
-                .AddParameterDefinition(new ValidCounterEnumerator())
+                .AddParameterDefinition(new ValidCounterEnum())
                 .GeneratePermutation<PressiusTestObjectWithEnum>();
             pressiusTestObjectList.ShouldNotBeNull();
             var objectList = pressiusTestObjectList.ToList();
             objectList.Count.ShouldBeGreaterThan(0);
             var integerParams = new IntegerParameter();
             var stringParams = new StringParameter();
-            var counterParams = new ValidCounterEnumerator();
+            var counterParams = new ValidCounterEnum();
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2} {3}",
@@ -132,18 +133,42 @@ namespace Pressius.Test
         }
 
         [Fact]
-        public void PressiusTestObjectWithNullableEnumerator_ShouldPermutate()
+        public void PressiusTestObjectWithNullableEnum_ShouldPermutate()
         {
             var permutor = new Permutor();
             var pressiusTestObjectList = permutor
-                .AddParameterDefinition(new ValidCounterEnumerator())
+                .AddParameterDefinition(new ValidCounterEnum())
                 .GeneratePermutation<PressiusTestObjectWithNullableEnum>();
             pressiusTestObjectList.ShouldNotBeNull();
             var objectList = pressiusTestObjectList.ToList();
             objectList.Count.ShouldBeGreaterThan(0);
             var integerParams = new IntegerParameter();
             var stringParams = new StringParameter();
-            var counterParams = new ValidCounterEnumerator();
+            var counterParams = new ValidCounterEnum();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2} {3}",
+                    obj.Id, obj.Name, obj.Address, obj.Counter);
+                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+                stringParams.InputCatalogues.ShouldContain(obj.Address);
+                counterParams.InputCatalogues.ShouldContain(obj.Counter);
+            });
+        }
+
+        [Fact]
+        public void PressiusTestObjectWithEnum_ShouldPermutateWithIntegerEnum()
+        {
+            var permutor = new Permutor();
+            var pressiusTestObjectList = permutor
+                .AddParameterDefinition(new ValidCounterEnumWithNumber())
+                .GeneratePermutation<PressiusTestObjectWithEnum>();
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+            var integerParams = new IntegerParameter();
+            var stringParams = new StringParameter();
+            var counterParams = new ValidCounterEnum();
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2} {3}",

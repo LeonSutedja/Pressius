@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Pressius.Test.Model;
 
-namespace Pressius.Test
+namespace Pressius.Test.Model
 {
     public class PressiusTestObjectParameterDefinition : DefaultParameterDefinition
     {

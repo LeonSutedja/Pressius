@@ -1,15 +1,15 @@
-using Pressius.Test.Model;
-using Pressius.Test.Shared;
-using Shouldly;
 using System.Collections.Generic;
 using System.Linq;
-using Pressius.Test.PremutationExtension.Model;
+using Pressius.Test.Model;
+using Pressius.Test.PermutationExtension.Model;
+using Pressius.Test.Shared;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Pressius.Test.PremutationExtension
+namespace Pressius.Test.PermutationExtension
 {
-    public partial class PermutationExtensionTest : BaseTest
+    public class PermutationExtensionTest : BaseTest
     {
         public PermutationExtensionTest(ITestOutputHelper output) : base(output)
         {

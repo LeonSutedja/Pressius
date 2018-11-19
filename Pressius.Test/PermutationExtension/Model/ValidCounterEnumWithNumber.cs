@@ -1,12 +1,11 @@
-﻿using Pressius.Test.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Pressius.Test
+namespace Pressius.Test.PermutationExtension.Model
 {
-    public class ValidCounterEnumerator : DefaultParameterDefinition
+    public class ValidCounterEnumWithNumber : DefaultParameterDefinition
     {
         public override List<object> InputCatalogues =>
-            new List<object> { Counter.One, Counter.Two, Counter.Three };
+            new List<object> { 0, 1, 2 };
 
         public override ParameterTypeDefinition TypeName =>
             new ParameterTypeDefinition("Counter");
