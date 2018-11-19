@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Pressius.ParameterDefinition;
 using Pressius.Test.Model;
 
 namespace Pressius.Test.PermutationExtension.Model

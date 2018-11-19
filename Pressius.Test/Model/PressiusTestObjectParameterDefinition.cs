@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Pressius.ParameterDefinition;
 
 namespace Pressius.Test.Model
 {

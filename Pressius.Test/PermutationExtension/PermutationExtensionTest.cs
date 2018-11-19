@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Pressius.ParameterDefinition;
 using Pressius.Test.Model;
 using Pressius.Test.PermutationExtension.Model;
 using Pressius.Test.Shared;
