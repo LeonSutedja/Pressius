@@ -106,5 +106,53 @@ namespace Pressius.Test
                     obj.Id, obj.Name, obj.Address);
             });
         }
+
+        [Fact]
+        public void PressiusTestObjectWithEnumerator_ShouldPermutate()
+        {
+            var permutor = new Permutor();
+            var pressiusTestObjectList = permutor
+                .AddParameterDefinition(new ValidCounterEnumerator())
+                .GeneratePermutation<PressiusTestObjectWithEnum>();
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+            var integerParams = new IntegerParameter();
+            var stringParams = new StringParameter();
+            var counterParams = new ValidCounterEnumerator();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2} {3}",
+                    obj.Id, obj.Name, obj.Address, obj.Counter);
+                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+                stringParams.InputCatalogues.ShouldContain(obj.Address);
+                counterParams.InputCatalogues.ShouldContain(obj.Counter);
+            });
+        }
+
+        [Fact]
+        public void PressiusTestObjectWithNullableEnumerator_ShouldPermutate()
+        {
+            var permutor = new Permutor();
+            var pressiusTestObjectList = permutor
+                .AddParameterDefinition(new ValidCounterEnumerator())
+                .GeneratePermutation<PressiusTestObjectWithNullableEnum>();
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+            var integerParams = new IntegerParameter();
+            var stringParams = new StringParameter();
+            var counterParams = new ValidCounterEnumerator();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2} {3}",
+                    obj.Id, obj.Name, obj.Address, obj.Counter);
+                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+                stringParams.InputCatalogues.ShouldContain(obj.Address);
+                counterParams.InputCatalogues.ShouldContain(obj.Counter);
+            });
+        }
     }
 }
