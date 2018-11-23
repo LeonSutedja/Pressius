@@ -165,6 +165,7 @@ namespace Pressius.Test.PermutationExtension
             var permutor = new Permutor();
             var pressiusTestObjectList = permutor
                 .AddParameterDefinition(new ValidCounterEnum())
+                .AddParameterDefinition(new ValidCounterTwoEnum())
                 .GeneratePermutation<PressiusTestObjectWithNullableEnum>();
             pressiusTestObjectList.ShouldNotBeNull();
             var objectList = pressiusTestObjectList.ToList();

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Pressius.ParameterDefinition;
-using Pressius.Test.Model;
 
 namespace Pressius.Test.PermutationExtension.Model
 {
@@ -11,6 +10,17 @@ namespace Pressius.Test.PermutationExtension.Model
 
         public override ParameterTypeDefinition TypeName =>
             new ParameterTypeDefinition("Counter");
+
+        public override bool CompareParamName => true;
+    }
+
+    public class ValidCounterTwoEnum : DefaultParameterDefinition
+    {
+        public override List<object> InputCatalogues =>
+            new List<object> { null, CounterTwo.One, CounterTwo.Two, CounterTwo.Three };
+
+        public override ParameterTypeDefinition TypeName =>
+            new ParameterTypeDefinition("CounterAgain");
 
         public override bool CompareParamName => true;
     }

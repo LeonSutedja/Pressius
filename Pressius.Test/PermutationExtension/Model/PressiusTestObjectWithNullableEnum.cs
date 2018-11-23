@@ -8,5 +8,6 @@ namespace Pressius.Test.Model
         public string Name { get; set; }
         public string Address { get; set; }
         public Counter? Counter { get; set; }
+        public CounterTwo? CounterAgain { get; set; }
     }
 }

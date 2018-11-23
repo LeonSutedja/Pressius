@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Pressius.Extensions;
+using Pressius.ParameterDefinition;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Pressius.Extensions;
-using Pressius.ParameterDefinition;
 
 namespace Pressius
 {
@@ -50,8 +50,8 @@ namespace Pressius
         {
             var objectDefinition = _objectDefinitions.FirstOrDefault(
                 od => string.Compare(od.AssemblyQualifiedClassName, assemblyQualifiedClassName) == 0);
-            return objectDefinition != null ? 
-                _generatePermutationBasedOnObjectDefinition(objectDefinition, assemblyQualifiedClassName) : 
+            return objectDefinition != null ?
+                _generatePermutationBasedOnObjectDefinition(objectDefinition, assemblyQualifiedClassName) :
                 _generatePermutation(assemblyQualifiedClassName);
         }
 
@@ -62,7 +62,7 @@ namespace Pressius
             var classType = Type.GetType(assemblyQualifiedClassName);
 
             return _useConstructor
-                ? _generateConstructorPermutation(classType, objectDefinition) 
+                ? _generateConstructorPermutation(classType, objectDefinition)
                 : _generatePropertiesPermutation(classType, objectDefinition);
         }
 
@@ -95,8 +95,8 @@ namespace Pressius
             private readonly List<IParameterDefinition> _parameterDefinitions;
 
             public PropertiesMutator(
-                Type classType, 
-                IObjectDefinition objectDefinition, 
+                Type classType,
+                IObjectDefinition objectDefinition,
                 List<IParameterDefinition> parameterDefinitions)
             {
                 _classType = classType;
@@ -152,11 +152,7 @@ namespace Pressius
                 {
                     var inputDefinitionType = string.Empty;
 
-                    if (prop.IsNullableProperty())
-                    {
-                        inputDefinitionType = prop.GetNullablePropertyName();
-                    }
-                    else if (objectDefinition == null)
+                    if (objectDefinition == null)
                     {
                         // when there is no object definition, we will check if there is
                         // an attribute parameter name definition that matches with the prop name.
@@ -168,13 +164,15 @@ namespace Pressius
                         }
                         else
                         {
-                            inputDefinitionType = prop.PropertyType.Name;
+                            inputDefinitionType = prop.IsNullableProperty()
+                                ? prop.GetNullablePropertyName()
+                                : prop.PropertyType.Name;
                         }
                     }
                     else if (!objectDefinition.MatcherDictionary.TryGetValue(prop.Name, out inputDefinitionType))
                     {
-                        // when there is an object definition and cannot be matched, 
-                        // we will check if there is an attribute parameter name definition 
+                        // when there is an object definition and cannot be matched,
+                        // we will check if there is an attribute parameter name definition
                         // that matches with the prop name.
                         // otherwise, we will assign the default prop.PropertyType.Name value
                         if (attributeParameterNameDefinitions.Any(pd => pd.TypeName.Equals(prop.Name)))
@@ -184,7 +182,9 @@ namespace Pressius
                         }
                         else
                         {
-                            inputDefinitionType = prop.PropertyType.Name;
+                            inputDefinitionType = prop.IsNullableProperty()
+                                ? prop.GetNullablePropertyName()
+                                : prop.PropertyType.Name;
                         }
                     }
 
@@ -208,8 +208,8 @@ namespace Pressius
             private readonly List<IParameterDefinition> _parameterDefinitions;
 
             public ConstructorMutator(
-                Type classType, 
-                IObjectDefinition objectDefinition, 
+                Type classType,
+                IObjectDefinition objectDefinition,
                 List<IParameterDefinition> parameterDefinitions)
             {
                 _classType = classType;
@@ -248,11 +248,8 @@ namespace Pressius
                 {
                     var inputDefinitionType = string.Empty;
                     var attributeParameterNameDefinitions = parameterDefinitions.Where(pd => pd.CompareParamName).ToList();
-                    if (param.IsNullableParameter())
-                    {
-                        inputDefinitionType = param.GetNullableParameterName();
-                    }
-                    else if (objectDefinition == null)
+
+                    if (objectDefinition == null)
                     {
                         if (attributeParameterNameDefinitions.Any(pd => pd.TypeName.Equals(param.Name)))
                         {
@@ -261,7 +258,9 @@ namespace Pressius
                         }
                         else
                         {
-                            inputDefinitionType = param.ParameterType.Name;
+                            inputDefinitionType = param.IsNullableParameter()
+                                ? param.GetNullableParameterName()
+                                : param.ParameterType.Name;
                         }
                     }
                     else if (!objectDefinition.MatcherDictionary.TryGetValue(param.Name, out inputDefinitionType))
@@ -273,7 +272,9 @@ namespace Pressius
                         }
                         else
                         {
-                            inputDefinitionType = param.ParameterType.Name;
+                            inputDefinitionType = param.IsNullableParameter()
+                                ? param.GetNullableParameterName()
+                                : param.ParameterType.Name;
                         }
                     }
 

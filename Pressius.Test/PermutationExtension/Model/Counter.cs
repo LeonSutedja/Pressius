@@ -6,4 +6,11 @@ namespace Pressius.Test.PermutationExtension.Model
         Two,
         Three
     }
+
+    public enum CounterTwo
+    {
+        One,
+        Two,
+        Three
+    }
 }
