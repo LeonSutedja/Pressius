@@ -1,5 +1,8 @@
 # Pressius
 
+## Release Notes 1.0.4
+- Fixes issues with compare param name with nullable value
+
 ## Release Notes 1.0.3
 - Fixes issues with constructor permutation
 - Added 'CompareParamName' attributes in the parameter definition. When this is set to true, the parameter definition will be compared to attribute name by default. With CompareParamName attribute, object definition class is not needed. Pressius takes precedence of the attribute names over the object definition.
