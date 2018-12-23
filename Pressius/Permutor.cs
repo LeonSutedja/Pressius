@@ -100,6 +100,12 @@ namespace Pressius
             return this;
         }
 
+        public Permutor WithId(string idParameterName)
+        {
+            _mutatorFactory.WithId(idParameterName);
+            return this;
+        }
+
         public IEnumerable<T> GeneratePermutation<T>()
         {
             return _mutatorFactory.GeneratePermutations<T>();

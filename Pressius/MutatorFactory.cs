@@ -12,6 +12,7 @@ namespace Pressius
         private readonly List<IParameterDefinition> _parameterDefinitions;
         private readonly List<IObjectDefinition> _objectDefinitions;
         private bool _useConstructor;
+        private string _idParameterName;
 
         public MutatorFactory()
         {
@@ -38,6 +39,8 @@ namespace Pressius
             => _parameterDefinitions.AddRange(parameterDefinitions);
 
         public void WithConstructor() => _useConstructor = true;
+
+        public void WithId(string idParamName) => _idParameterName = idParamName;
 
         public IEnumerable<T> GeneratePermutations<T>()
         {
@@ -84,21 +87,24 @@ namespace Pressius
             Type classType,
             IObjectDefinition objectDefinition = null)
         {
-            var mutator = new PropertiesMutator(classType, objectDefinition, _parameterDefinitions);
+            var mutator = new PropertiesMutator(_idParameterName, classType, objectDefinition, _parameterDefinitions);
             return mutator.Mutate();
         }
 
         private class PropertiesMutator
         {
+            private readonly string _idParameterName;
             private readonly Type _classType;
             private readonly IObjectDefinition _objectDefinition;
             private readonly List<IParameterDefinition> _parameterDefinitions;
 
             public PropertiesMutator(
+                string idParameterName,
                 Type classType,
                 IObjectDefinition objectDefinition,
                 List<IParameterDefinition> parameterDefinitions)
             {
+                _idParameterName = idParameterName;
                 _classType = classType;
                 _objectDefinition = objectDefinition;
                 _parameterDefinitions = parameterDefinitions;
@@ -114,15 +120,17 @@ namespace Pressius
 
                 var attributePermutations = new List<List<object>>();
                 propertyPermutationLists.GeneratePermutations(attributePermutations);
-                return _generateObjectList(_classType, attributePermutations);
+                return _generateObjectList(_idParameterName, _classType, attributePermutations);
             }
 
             private List<object> _generateObjectList(
+                string idParameterName,
                 Type classType,
                 List<List<object>> attributePermutations)
             {
                 var listOfProperties = classType.GetProperties();
                 var results = new List<object>();
+                var idCount = 0;
                 foreach (var permutationSet in attributePermutations)
                 {
                     var constructor = classType.GetConstructor(Type.EmptyTypes);
@@ -132,8 +140,16 @@ namespace Pressius
                     for (var i = 0; i < listOfProperties.Length; i++)
                     {
                         var prop = listOfProperties[i];
-                        var propValue = permutationSet[i];
-                        prop.SetValue(newInput, propValue);
+                        if (idParameterName != null && prop.Name.Equals(idParameterName))
+                        {
+                            idCount++;
+                            prop.SetValue(newInput, idCount);
+                        }
+                        else
+                        {
+                            var propValue = permutationSet[i];
+                            prop.SetValue(newInput, propValue);
+                        }
                     }
                     results.Add(newInput);
                 }

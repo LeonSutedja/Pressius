@@ -39,7 +39,7 @@ namespace Pressius.Test
                 booleanParams.InputCatalogues.ShouldContain(obj.BooleanValue);
                 decimalParams.InputCatalogues.ShouldContain(obj.DecimalValue);
             });
-        }
+        }     
 
         /// <summary>
         /// Constructor permutator will take the first constructor it will find.
@@ -105,6 +105,32 @@ namespace Pressius.Test
             {
                 _output.WriteLine("Obj: {0} {1} {2}",
                     obj.Id, obj.Name, obj.Address);
+            });
+        }
+
+        /// <summary>
+        /// Constructor permutator will take the first constructor it will find.
+        /// </summary>
+        [Fact]
+        public void PressiusTestObjectWithId_ShouldPermutate()
+        {
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .WithId("Id")
+                .GeneratePermutation<PressiusTestObject>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+
+            var stringParams = new StringParameter();
+            var idCount = 1;
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                obj.Id.ShouldBe(idCount);
+                idCount++;
+                stringParams.InputCatalogues.ShouldContain(obj.Name);                
             });
         }
     }
