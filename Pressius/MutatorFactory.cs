@@ -79,7 +79,7 @@ namespace Pressius
             Type classType,
             IObjectDefinition objectDefinition = null)
         {
-            var mutator = new ConstructorMutator(classType, objectDefinition, _parameterDefinitions);
+            var mutator = new ConstructorMutator(classType, objectDefinition, _parameterDefinitions, _idParameterName);
             return mutator.Mutate();
         }
 
@@ -222,15 +222,18 @@ namespace Pressius
             private readonly Type _classType;
             private readonly IObjectDefinition _objectDefinition;
             private readonly List<IParameterDefinition> _parameterDefinitions;
+            private readonly string _idParameterName;
 
             public ConstructorMutator(
                 Type classType,
                 IObjectDefinition objectDefinition,
-                List<IParameterDefinition> parameterDefinitions)
+                List<IParameterDefinition> parameterDefinitions,
+                string idParameterName)
             {
                 _classType = classType;
                 _objectDefinition = objectDefinition;
                 _parameterDefinitions = parameterDefinitions;
+                _idParameterName = idParameterName;
             }
 
             public IEnumerable<object> Mutate()
@@ -246,6 +249,9 @@ namespace Pressius
 
                 var attributePermutations = new List<List<object>>();
                 propertyPermutationLists.GeneratePermutations(attributePermutations);
+
+                var attributePermutationsWithId = _generateAttributePermutationsId(listOfParameters,
+                    attributePermutations, _idParameterName);
 
                 var results = attributePermutations
                     .Select(ap => Activator.CreateInstance(_classType, ap.ToArray()));
@@ -304,6 +310,36 @@ namespace Pressius
 
                 return propertyPermutationLists;
             }
+
+            private List<List<object>> _generateAttributePermutationsId(
+                ParameterInfo[] listOfParameters,
+                List<List<object>> currentAttributePermutations,
+                string idParameterName)
+            {
+                if (_idParameterName == null)
+                    return currentAttributePermutations;
+
+                var parameter = listOfParameters.FirstOrDefault(pd => string.Equals(pd.Name, idParameterName));
+                if(parameter == null)
+                    throw new Exception("Cannot find id with attribute name: " + idParameterName);
+
+                var idType = parameter.ParameterType.Name;
+
+                var idIndex = listOfParameters.ToList().IndexOf(parameter);
+
+                var count = 1;
+                foreach (var attributePermutation in currentAttributePermutations)
+                {
+                    if(idType.Contains("Int"))
+                        attributePermutation[idIndex] = count;
+                    else
+                        throw new Exception("Only Int Id permutation is supported.");
+
+                    count++;
+                }
+
+                return currentAttributePermutations;
+            }            
         }
     }
 }

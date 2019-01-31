@@ -109,7 +109,7 @@ namespace Pressius.Test
         }
 
         /// <summary>
-        /// Constructor permutator will take the first constructor it will find.
+        /// Permutator with Id as one of the object
         /// </summary>
         [Fact]
         public void PressiusTestObjectWithId_ShouldPermutate()
@@ -133,5 +133,32 @@ namespace Pressius.Test
                 stringParams.InputCatalogues.ShouldContain(obj.Name);                
             });
         }
+
+        /// <summary>
+        /// Constructor permutator with Id as one of the object
+        /// </summary>
+        [Fact]
+        public void PressiusTestObjectWithConstructorAndId_ShouldPermutate()
+        {
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .WithConstructor()
+                .WithId("id")
+                .GeneratePermutation<PressiusTestObjectWithConstructor>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+
+            var stringParams = new StringParameter();
+            var idCount = 1;
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                obj.Id.ShouldBe(idCount);
+                idCount++;
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+            });
+        }        
     }
 }
