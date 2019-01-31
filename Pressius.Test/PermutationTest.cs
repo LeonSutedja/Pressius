@@ -39,7 +39,7 @@ namespace Pressius.Test
                 booleanParams.InputCatalogues.ShouldContain(obj.BooleanValue);
                 decimalParams.InputCatalogues.ShouldContain(obj.DecimalValue);
             });
-        }     
+        }
 
         /// <summary>
         /// Constructor permutator will take the first constructor it will find.
@@ -65,7 +65,7 @@ namespace Pressius.Test
         public static IEnumerable<object[]> ValidPressiusTestObject()
         {
             var pressiusInputs = Permutor.Generate<PressiusTestObject>();
-            foreach (var input in pressiusInputs)
+            foreach(var input in pressiusInputs)
             {
                 yield return new object[]
                 {
@@ -107,6 +107,13 @@ namespace Pressius.Test
                     obj.Id, obj.Name, obj.Address);
             });
         }
+    }
+
+    public class IdPermutationTest : BaseTest
+    {
+        public IdPermutationTest(ITestOutputHelper output) : base(output)
+        {
+        }
 
         /// <summary>
         /// Permutator with Id as one of the object
@@ -130,7 +137,31 @@ namespace Pressius.Test
                 _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
                 obj.Id.ShouldBe(idCount);
                 idCount++;
-                stringParams.InputCatalogues.ShouldContain(obj.Name);                
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+            });
+        }
+
+        /// <summary>
+        /// Permutator with Id as one of the object
+        /// </summary>
+        [Fact]
+        public void PressiusTestObjectWithGuidId_ShouldPermutate()
+        {
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .GeneratePermutation<PressiusTestObjectWithGuid>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+
+            var stringParams = new StringParameter();
+            var idCount = 1;
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                idCount++;
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
             });
         }
 
@@ -159,6 +190,31 @@ namespace Pressius.Test
                 idCount++;
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
             });
-        }        
+        }
+
+        /// <summary>
+        /// Constructor permutator with Id as one of the object
+        /// </summary>
+        [Fact]
+        public void PressiusTestObjectWithConstructorAndGuidId_ShouldPermutate()
+        {
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .WithConstructor()
+                .GeneratePermutation<PressiusTestObjectWithConstructorGuidId>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+
+            var stringParams = new StringParameter();
+            var idCount = 1;
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                idCount++;
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+            });
+        }
     }
 }

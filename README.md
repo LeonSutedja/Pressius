@@ -1,5 +1,8 @@
 # Pressius
 
+## Release Notes 1.1.0
+- Added support for int Id permutation and Guid id permutation
+
 ## Release Notes 1.0.4
 - Fixes issues with compare param name with nullable value
 
@@ -117,12 +120,85 @@ public class PressiusTestObjectWithConstructor
 }
 ```
 
+### Example to generate Id
+
+**New in 1.1.0**
+
+Only Integer and Guid for Id is currently supported by default.
+
+To permutate an integer Id we need to use .WithId("{Id name}"). This is as, integer is a generic type, and it is required to distinguished between normal integer, an id.
+ 
+```csharp
+public class PressiusTestObject
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public int? NullableInteger { get; set; }
+    public decimal DecimalValue { get; set; }
+    public bool BooleanValue { get; set; }
+    public DateTime Created { get; set; }
+    public DateTime? Modified { get; set; }
+} 
+```
+
+Then pressius can be call with:
+```csharp
+var pressius = new Permutor();
+var pressiusTestObjectList = pressius
+	.WithId("Id")
+    .GeneratePermutation<PressiusTestObject>();
+```
+
+Constructor is also similar. An object like:
+```csharp
+ public class PressiusTestObjectWithConstructor
+{
+    public int Id { get; }
+    public string Name { get; }
+    public string Address { get; }
+
+    public PressiusTestObjectWithConstructor(int id, string name)
+    {
+        Id = id;
+        Name = name;
+        Address = "Default Address";
+    }
+}
+```
+Can be permutated with the following command:
+```csharp
+var pressius = new Permutor();
+var pressiusTestObjectList = pressius
+    .WithConstructor()
+    .WithId("id")
+    .GeneratePermutation<PressiusTestObjectWithConstructor>();
+```
+
+Guid permutation is more straightforward, and does not require WithId. This is as, Guid itself is a type, and hence we can identify it.
+An example of a guid object:
+```csharp
+public class PressiusTestObjectWithGuid
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+}
+```
+
+can be permutated with simply the following:
+```csharp
+var pressius = new Permutor();
+var pressiusTestObjectList = pressius
+    .GeneratePermutation<PressiusTestObjectWithGuid>();
+```
+
 ### Example to compare with attribute name
 
 **New in 1.0.3**
 
-Release 1.0.3 contains CompareParamName variable which can be set in the parameter definition.
-Once this is set, the permutation will take this, and tries to compare to the attribute name by default.
+Release 1.0.3 adds CompareParamName variable in the parameter definition.
+Once this is set, the permutation will take this, and tries to compare to the attribute name instead of the type.
 
 An example is like below:
 
