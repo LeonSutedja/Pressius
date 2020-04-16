@@ -87,6 +87,49 @@ namespace Pressius.Test
         }
 
         [Fact]
+        public void PressiusTestObject_ShouldPermutateExtendedCustomer_WithCustomParameterDefinition()
+        {
+            var firstNameObjects = new List<object> { "John", "Anastasia", "" };
+            var lastNameObjects = new List<object> { "Abnc", "LastName", "" };
+            var permutor = new Permutor();
+            var pressiusTestObjectList = (new Permutor())
+                .AddParameterDefinition("FirstName", firstNameObjects)
+                .AddParameterDefinition("LastName", lastNameObjects)
+                .GeneratePermutation<Customer>();
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+            var firstNameAsStrings = firstNameObjects.Select(n => n.ToString());
+            var lastNameAsStrings = lastNameObjects.Select(n => n.ToString());
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2} {3}",
+                    obj.Id, obj.FirstName, obj.LastName, obj.Occupation);
+                obj.FirstName.ShouldBeOneOf(firstNameAsStrings.ToArray());
+                obj.LastName.ShouldBeOneOf(lastNameAsStrings.ToArray());
+            });
+        }
+
+        [Fact]
+        public void PressiusTestObject_ShouldPermutateExtendedCustomer_WithNullParameterDefinition()
+        {
+            var permutor = new Permutor();
+            var pressiusTestObjectList = permutor
+                .AddParameterDefinition("FirstName", new List<object> { "John", "Anastasia", "" })
+                .AddNullParameterDefinition("Occupation")
+                .GeneratePermutation<Customer>();
+            pressiusTestObjectList.ShouldNotBeNull();
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.Count.ShouldBeGreaterThan(0);
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2} {3}",
+                    obj.Id, obj.FirstName, obj.LastName, obj.Occupation);
+                obj.Occupation.ShouldBeNull();
+            });
+        }
+
+        [Fact]
         public void PressiusTestObject_ShouldPermutateCustomer()
         {
             var pressiusTestObjectList = Permutor.Generate<Customer>();
@@ -95,8 +138,8 @@ namespace Pressius.Test
             objectList.Count.ShouldBeGreaterThan(0);
             objectList.ForEach(obj =>
             {
-            _output.WriteLine("Obj: {0} {1} {2} {3}",
-                obj.Id, obj.FirstName, obj.LastName, obj.Occupation);
+                _output.WriteLine("Obj: {0} {1} {2} {3}",
+                    obj.Id, obj.FirstName, obj.LastName, obj.Occupation);
             });
         }
 
@@ -149,7 +192,7 @@ namespace Pressius.Test
         public static IEnumerable<object[]> ValidPressiusTestObject()
         {
             var pressiusInputs = Permutor.Generate<PressiusTestObject>();
-            foreach(var input in pressiusInputs)
+            foreach (var input in pressiusInputs)
             {
                 yield return new object[]
                 {

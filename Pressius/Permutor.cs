@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Pressius.ParameterDefinition;
+using System.Collections.Generic;
 
 namespace Pressius
 {
@@ -85,6 +86,22 @@ namespace Pressius
         public Permutor AddParameterDefinition(IParameterDefinition parameterDefinition)
         {
             _mutatorFactory.AddParameterDefinition(parameterDefinition);
+            return this;
+        }
+
+        public Permutor AddParameterDefinition(string propertyName, List<object> items)
+        {
+            var definition = new CustomParameterDefinition(propertyName);
+            definition.AddInputCatalogues(items);
+            _mutatorFactory.AddParameterDefinition(definition);
+            return this;
+        }
+
+        public Permutor AddNullParameterDefinition(string propertyName)
+        {
+            var definition = new CustomParameterDefinition(propertyName);
+            definition.AddInputCatalogues(new List<object> { null });
+            _mutatorFactory.AddParameterDefinition(definition);
             return this;
         }
 
