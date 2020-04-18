@@ -49,9 +49,9 @@ namespace Pressius
             _matcherDictionary = new Dictionary<string, string>();
         }
 
-        public void AddMatcher(string parameterTypeName, string matchingParameterDefinitionTypeName)
+        public void SetMatcher(Dictionary<string, string> matcher)
         {
-            _matcherDictionary.Add(parameterTypeName, matchingParameterDefinitionTypeName);
+            _matcherDictionary = matcher;
         }
     }
 }

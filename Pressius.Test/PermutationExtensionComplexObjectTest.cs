@@ -47,7 +47,6 @@ namespace Pressius.Test
                 .WithId("Id")
                 .AddParameterDefinition("PressiusTestObject", paramDefinitionInputCatalogues)
                 .AddParameterDefinition("OtherVariable", otherVariableCatalogues, true)
-                .WithCustomObjectDefinition<PressiusTestComplexObject>()
                 .WithObjectDefinitionMatcher("PressiusTestObject", "PressiusTestObject")
                 .GeneratePermutation<PressiusTestComplexObject>();
 

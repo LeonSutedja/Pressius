@@ -78,8 +78,7 @@ namespace Pressius
             return inputs;
         }
 
-        private IObjectDefinition _customObjectDefinition;
-        private MethodInfo _addMatcherMethodInfo;
+        private Dictionary<string, string> _tempMatcherDictionary;
 
         private MutatorFactory _mutatorFactory { get; }
 
@@ -118,17 +117,11 @@ namespace Pressius
             return this;
         }
 
-        public Permutor WithCustomObjectDefinition<T>()
-        {
-            var customObjectDefinition = new CustomObjectDefinition<T>();
-            _customObjectDefinition = customObjectDefinition;
-            _addMatcherMethodInfo = typeof(CustomObjectDefinition<T>).GetMethod("AddMatcher");
-            return this;
-        }
-
         public Permutor WithObjectDefinitionMatcher(string parameterTypeKey, string parameterValuesMatcherName)
         {
-            _addMatcherMethodInfo.Invoke(_customObjectDefinition, new object[] { parameterTypeKey, parameterValuesMatcherName });
+            _tempMatcherDictionary = _tempMatcherDictionary ?? new Dictionary<string, string>();
+            _tempMatcherDictionary.Add(parameterTypeKey, parameterValuesMatcherName);
+
             return this;
         }
 
@@ -146,8 +139,13 @@ namespace Pressius
 
         public IEnumerable<T> GeneratePermutation<T>()
         {
-            if (_customObjectDefinition != null)
-                _mutatorFactory.AddObjectDefinition(_customObjectDefinition);
+            if (_tempMatcherDictionary != null)
+            {
+                var customObjectDefinition = new CustomObjectDefinition<T>();
+                customObjectDefinition.SetMatcher(_tempMatcherDictionary);
+                _mutatorFactory.AddObjectDefinition(customObjectDefinition);
+            }
+
             return _mutatorFactory.GeneratePermutations<T>();
         }
     }
