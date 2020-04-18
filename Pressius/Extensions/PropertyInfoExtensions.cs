@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Pressius.Extensions
 {
-    internal static class PropertyInfoExtensioins
+    internal static class PropertyInfoExtensions
     {
         public static bool IsNullableProperty(this PropertyInfo prop)
             => prop.PropertyType.IsGenericType &&

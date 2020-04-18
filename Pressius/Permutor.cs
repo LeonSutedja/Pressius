@@ -89,18 +89,20 @@ namespace Pressius
             return this;
         }
 
-        public Permutor AddParameterDefinition(string propertyName, List<object> items)
+        public Permutor AddParameterDefinition(string propertyName, List<object> items, bool compareParameterName = false)
         {
             var definition = new CustomParameterDefinition(propertyName);
             definition.AddInputCatalogues(items);
+            if (compareParameterName) definition.CompareWithParameterName();
             _mutatorFactory.AddParameterDefinition(definition);
             return this;
         }
 
-        public Permutor AddNullParameterDefinition(string propertyName)
+        public Permutor AddNullParameterDefinition(string propertyName, bool compareParameterName = false)
         {
             var definition = new CustomParameterDefinition(propertyName);
             definition.AddInputCatalogues(new List<object> { null });
+            if (compareParameterName) definition.CompareWithParameterName();
             _mutatorFactory.AddParameterDefinition(definition);
             return this;
         }

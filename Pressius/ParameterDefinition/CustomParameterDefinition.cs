@@ -10,18 +10,21 @@ namespace Pressius.ParameterDefinition
         private ParameterTypeDefinition _typeName;
         public override ParameterTypeDefinition TypeName { get { return _typeName; } }
 
-        public override bool CompareParamName => true;
+        private bool _compareParameterName;
+        public override bool CompareParamName { get { return _compareParameterName; } }
 
         public CustomParameterDefinition(string typeName)
         {
             _inputCatalogues = new List<object>();
             _typeName = new ParameterTypeDefinition(typeName);
+            _compareParameterName = base.CompareParamName;
         }
 
         public CustomParameterDefinition(List<string> typeNames)
         {
             _inputCatalogues = new List<object>();
             _typeName = new ParameterTypeDefinition(typeNames);
+            _compareParameterName = base.CompareParamName;
         }
 
         public void AddInputCatalogues(object input)
@@ -32,6 +35,11 @@ namespace Pressius.ParameterDefinition
         public void AddInputCatalogues(List<object> inputs)
         {
             _inputCatalogues.AddRange(inputs);
+        }
+
+        public void CompareWithParameterName()
+        {
+            _compareParameterName = true;
         }
     }
 }

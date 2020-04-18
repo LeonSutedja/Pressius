@@ -93,8 +93,8 @@ namespace Pressius.Test
             var lastNameObjects = new List<object> { "Abnc", "LastName", "" };
             var permutor = new Permutor();
             var pressiusTestObjectList = (new Permutor())
-                .AddParameterDefinition("FirstName", firstNameObjects)
-                .AddParameterDefinition("LastName", lastNameObjects)
+                .AddParameterDefinition("FirstName", firstNameObjects, true)
+                .AddParameterDefinition("LastName", lastNameObjects, true)
                 .GeneratePermutation<Customer>();
             pressiusTestObjectList.ShouldNotBeNull();
             var objectList = pressiusTestObjectList.ToList();
@@ -115,8 +115,8 @@ namespace Pressius.Test
         {
             var permutor = new Permutor();
             var pressiusTestObjectList = permutor
-                .AddParameterDefinition("FirstName", new List<object> { "John", "Anastasia", "" })
-                .AddNullParameterDefinition("Occupation")
+                .AddParameterDefinition("FirstName", new List<object> { "John", "Anastasia", "" }, true)
+                .AddNullParameterDefinition("Occupation", true)
                 .GeneratePermutation<Customer>();
             pressiusTestObjectList.ShouldNotBeNull();
             var objectList = pressiusTestObjectList.ToList();
