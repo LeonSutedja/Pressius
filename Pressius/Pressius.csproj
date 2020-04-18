@@ -3,8 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Leon Sutedja</Authors>
-    <Description>Pressius is a simple naive object generator. It will generate permutations of the object based on the object attributes.
-Sample usage can be seen in: https://github.com/LeonSutedja/Pressius</Description>
+    <Description>
+      Pressius is a simple naive object generator. It will generate permutations of the object based on the object attributes.
+      Sample usage can be seen in: https://github.com/LeonSutedja/Pressius
+    </Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>false</SignAssembly>
     <RepositoryType>Github</RepositoryType>
@@ -12,8 +14,8 @@ Sample usage can be seen in: https://github.com/LeonSutedja/Pressius</Descriptio
     <PackageProjectUrl>https://github.com/LeonSutedja/Pressius</PackageProjectUrl>
     <Copyright>LeonSutedja</Copyright>
     <PackageLicenseUrl>https://github.com/LeonSutedja/Pressius/blob/master/LICENSE</PackageLicenseUrl>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
-    <Version>1.1.1</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 </Project>
