@@ -1,5 +1,7 @@
 ﻿using Pressius.ParameterDefinition;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Pressius
 {
@@ -76,6 +78,9 @@ namespace Pressius
             return inputs;
         }
 
+        private IObjectDefinition _customObjectDefinition;
+        private MethodInfo _addMatcherMethodInfo;
+
         private MutatorFactory _mutatorFactory { get; }
 
         public Permutor()
@@ -113,6 +118,20 @@ namespace Pressius
             return this;
         }
 
+        public Permutor WithCustomObjectDefinition<T>()
+        {
+            var customObjectDefinition = new CustomObjectDefinition<T>();
+            _customObjectDefinition = customObjectDefinition;
+            _addMatcherMethodInfo = typeof(CustomObjectDefinition<T>).GetMethod("AddMatcher");
+            return this;
+        }
+
+        public Permutor WithObjectDefinitionMatcher(string parameterTypeKey, string parameterValuesMatcherName)
+        {
+            _addMatcherMethodInfo.Invoke(_customObjectDefinition, new object[] { parameterTypeKey, parameterValuesMatcherName });
+            return this;
+        }
+
         public Permutor WithConstructor()
         {
             _mutatorFactory.WithConstructor();
@@ -127,6 +146,8 @@ namespace Pressius
 
         public IEnumerable<T> GeneratePermutation<T>()
         {
+            if (_customObjectDefinition != null)
+                _mutatorFactory.AddObjectDefinition(_customObjectDefinition);
             return _mutatorFactory.GeneratePermutations<T>();
         }
     }

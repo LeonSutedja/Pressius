@@ -13,7 +13,7 @@ namespace Pressius
         public string PropertyName { get; private set; }
         public IParameterDefinition ParameterDefinition { get; private set; }
     }
-    
+
     public abstract class AbstractObjectDefinition<T> : IObjectDefinition
     {
         public string AssemblyQualifiedClassName => typeof(T).AssemblyQualifiedName;
@@ -34,8 +34,24 @@ namespace Pressius
             return result;
         }
     }
-    
+
     public abstract class PropertiesObjectDefinition<T> : AbstractObjectDefinition<T>
     {
+    }
+
+    public class CustomObjectDefinition<T> : AbstractObjectDefinition<T>
+    {
+        private Dictionary<string, string> _matcherDictionary;
+        public override Dictionary<string, string> MatcherDictionary => _matcherDictionary;
+
+        public CustomObjectDefinition()
+        {
+            _matcherDictionary = new Dictionary<string, string>();
+        }
+
+        public void AddMatcher(string parameterTypeName, string matchingParameterDefinitionTypeName)
+        {
+            _matcherDictionary.Add(parameterTypeName, matchingParameterDefinitionTypeName);
+        }
     }
 }
