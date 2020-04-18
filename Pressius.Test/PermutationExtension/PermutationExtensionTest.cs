@@ -66,6 +66,40 @@ namespace Pressius.Test.PermutationExtension
         }
 
         [Fact]
+        public void PressiusTestObject_WithPermutorNewInterfaces_ShouldPermutateWithCustomValues()
+        {
+            var stringParams = new StringParameter();
+            var validLocation = new List<object> {
+               "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
+               "111 St Kilda, VIC 3004, Melbourne, Australia" };
+            var integerGuid = new List<object> {
+                1531,
+                9975
+            };
+
+            var pressius = new Permutor();
+            var pressiusTestObjectList = pressius
+                .AddParameterDefinition("ValidLocation", new List<object> {
+                   "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
+                   "111 St Kilda, VIC 3004, Melbourne, Australia" })
+                .AddParameterDefinition("IntegerGuid", new List<object> { 1531, 9975 })
+                .WithObjectDefinitionMatcher("Address", "ValidLocation")
+                .WithObjectDefinitionMatcher("Id", "IntegerGuid")
+                .GeneratePermutation<PressiusTestObject>();
+
+            pressiusTestObjectList.ShouldNotBeNull();
+            pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusTestObjectList.ToList();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
+                integerGuid.ShouldContain(obj.Id);
+                validLocation.ShouldContain(obj.Address);
+                stringParams.InputCatalogues.ShouldContain(obj.Name);
+            });
+        }
+
+        [Fact]
         public void PressiusTestObject_WithValidLocationAttribute_ShouldPermutateWithCustomValues()
         {
             var pressius = new Permutor();

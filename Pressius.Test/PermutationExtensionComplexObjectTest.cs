@@ -45,9 +45,9 @@ namespace Pressius.Test
             };
             var pressiusTestObjectList = new Permutor()
                 .WithId("Id")
-                .AddParameterDefinition("PressiusTestObject", paramDefinitionInputCatalogues)
+                .AddParameterDefinition("PressiusTestObjectNew", paramDefinitionInputCatalogues)
                 .AddParameterDefinition("OtherVariable", otherVariableCatalogues, true)
-                .WithObjectDefinitionMatcher("PressiusTestObject", "PressiusTestObject")
+                .WithObjectDefinitionMatcher("PressiusTestObject", "PressiusTestObjectNew")
                 .GeneratePermutation<PressiusTestComplexObject>();
 
             pressiusTestObjectList.ShouldNotBeNull();

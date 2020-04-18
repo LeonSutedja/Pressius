@@ -1,5 +1,9 @@
 # Pressius
 
+## Release Notes 1.2.0
+- Added interfaces on Permutor to create object definition. The new interface deprecates the requirement to create object definition as a class.
+- Added interfaces on Permutor to create parameter type definition. The new interface deprecates the requirement to create parameter definition as a class.
+
 ## Release Notes 1.1.0
 - Added support for int Id permutation and Guid id permutation
 
@@ -37,59 +41,47 @@ To permutate, simply call:
 var permutationList = Permutor.Generate<PressiusTestObject>();
 ```
 
-### Example with extension:
+### Example to use your own custom values to permutate:
 	
 Pressius is easily extendable. The extension points are able to provide more definition in the test cases.
-To extend the function with a custom input values to be mutated, a class extended from PropertiesObjectDefinition<T> is required.
-This is where T is the type of the object to be mutated. Example of the function is below.
+The following are sample code to use your own values to permutate.
 
-```csharp
-public class PressiusTestObjectObjectDefinition : PropertiesObjectDefinition<PressiusTestObject>
-{
-	public override Dictionary<string, string> MatcherDictionary => 
- 		new Dictionary<string, string>
-  		{
-			{ "Address", "ValidLocation" }
-		};
-}
-```
-
-To create a set of custom values as an input, a class extended from DefaultParameterDefinition is required.
-Below is an example of such class for 'ValidLocation' above.
-
-```csharp
-public class ValidLocation : DefaultParameterDefinition
-{
-	public override List<object> InputCatalogues =>
-  		new List<object> {
-   			"Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
-    			"111 St Kilda, VIC 3004, Melbourne, Australia"
-   		};
- 
-	public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("ValidLocation");
-}
-```
-
-To bind them all together, the following is a sample usage:
-
-```csharp
-var addedParameterDefinitions = new List<IParameterDefinition>()
-{
-	new ValidLocation()
-};
-var pressiusInputs = Permutor.Generate<PressiusTestObject>(
-	new PressiusTestObjectObjectDefinition(), 
-	addedParameterDefinitions);
-```
-
-Or, the following will also works:
+**New in 1.2.0**
 
 ```csharp
 var pressius = new Permutor();
-var permutations = pressius
-	.AddParameterDefinition(new ValidLocation())
-	.AddObjectDefinition(new PressiusTestObjectObjectDefinition())
+var pressiusTestObjectList = pressius
+	.AddParameterDefinition("ValidLocation", new List<object> {
+		"Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
+		"111 St Kilda, VIC 3004, Melbourne, Australia" }) // "ValidLocation" is the collection name of values
+	.AddParameterDefinition("IntegerCollection", new List<object> { 1531, 9975 }) // "IntegerCollection" is the collection name of values
+	.WithObjectDefinitionMatcher("Address", "ValidLocation") // We are telling a property name "Address" to use the collection of "ValidLocation"
+	.WithObjectDefinitionMatcher("Id", "IntegerCollection") // We are telling the property name "Id" to use collection of "IntegerCollection"
 	.GeneratePermutation<PressiusTestObject>();
+```
+
+### Example to compare with property name
+
+**New in 1.2.0**
+
+The test complex object that we want to mutate is as follow:
+```csharp
+public class PressiusTestComplexObject
+{
+	public int Id { get; set; }
+	public PressiusTestObject PressiusTestObject { get; set; }
+	public string OtherVariable { get; set; }
+}
+```
+
+To mutate the above, we simply need to do:
+```csharp
+var pressiusTestObjectList = new Permutor()
+	.WithId("Id")
+	.AddParameterDefinition("CollectionName", paramDefinitionInputCatalogues) // In here, we are creating a collection of name "CollectionName"
+	.AddParameterDefinition("OtherVariable", otherVariableCatalogues, true) // The 'true', in here sets that, this collection is for a property name "OtherVarible"
+	.WithObjectDefinitionMatcher("PressiusTestObject", "CollectionName") // We are using telling to match PressiusTestObject type to a collection values with name "CollectionName"
+	.GeneratePermutation<PressiusTestComplexObject>();
 ```
 
 ### Example with constructor:		
@@ -122,10 +114,7 @@ public class PressiusTestObjectWithConstructor
 
 ### Example to generate Id
 
-**New in 1.1.0**
-
 Only Integer and Guid for Id is currently supported by default.
-
 To permutate an integer Id we need to use .WithId("{Id name}"). This is as, integer is a generic type, and it is required to distinguished between normal integer, an id.
  
 ```csharp
@@ -171,7 +160,7 @@ Can be permutated with the following command:
 var pressius = new Permutor();
 var pressiusTestObjectList = pressius
     .WithConstructor()
-    .WithId("id")
+    .WithId("Id") // Id is the property name for the id. 
     .GeneratePermutation<PressiusTestObjectWithConstructor>();
 ```
 
@@ -191,36 +180,6 @@ can be permutated with simply the following:
 var pressius = new Permutor();
 var pressiusTestObjectList = pressius
     .GeneratePermutation<PressiusTestObjectWithGuid>();
-```
-
-### Example to compare with attribute name
-
-**New in 1.0.3**
-
-Release 1.0.3 adds CompareParamName variable in the parameter definition.
-Once this is set, the permutation will take this, and tries to compare to the attribute name instead of the type.
-
-An example is like below:
-
-```csharp
-public class ValidNameWithCompareParamName : DefaultParameterDefinition
-{
-	public override List<object> InputCatalogues =>
-		new List<object> { "Clark Kent", "Bruce Wayne", "Barry Allen" };
- 
- 	public override ParameterTypeDefinition TypeName => new ParameterTypeDefinition("name");
- 
-	public override bool CompareParamName => true;
-}
-```
-
-This allows to ommit object definition class, and we can permutate with the following:
-
-```csharp
-var pressius = new Permutor();
-var pressiusTestObjectList = pressius
-	.AddParameterDefinition(new ValidNameWithCompareParamName())
-	.GeneratePermutation<PressiusTestObjectWithConstructor>();	
 ```
 
 ### Nullable value
