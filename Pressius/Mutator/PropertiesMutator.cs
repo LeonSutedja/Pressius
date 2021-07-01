@@ -29,7 +29,6 @@ namespace Pressius
         {
             var listOfProperties = _classType.GetProperties();
             var propertyPermutationLists = _generatePermutationList(
-                _idName,
                 listOfProperties,
                 _parameterDefinitions,
                 _objectDefinition);
@@ -40,7 +39,6 @@ namespace Pressius
         }
 
         private List<List<object>> _generatePermutationList(
-            string idName,
             PropertyInfo[] propertyInfos,
             List<IParameterDefinition> parameterDefinitions,
             IObjectDefinition objectDefinition)
@@ -97,7 +95,17 @@ namespace Pressius
 
                 if (testInput == null)
                 {
-                    throw new Exception($"Cannot Found Matching Definition for: { inputDefinitionType }, have you assign ObjectDefinition correctly?");
+                    try
+                    {
+                        // We can't find anything that matches this type. We will try to generate the list of object of this type recursively.
+                        var assemblyQualifiedName = prop.PropertyType.AssemblyQualifiedName;
+                        var customTypePropertyMutator = new PropertiesMutator(null, prop.PropertyType, _objectDefinition, _parameterDefinitions);
+                        testInput = customTypePropertyMutator.Mutate().ToList();
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Cannot Found Matching Definition for: { inputDefinitionType }, and have failed to generate permutations with error { e.Message }. Have you assign ObjectDefinition correctly?");
+                    }
                 }
 
                 propertyPermutationLists.Add(testInput);

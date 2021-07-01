@@ -86,5 +86,21 @@ namespace Pressius.Test
                 _output.WriteLine("Obj: {0} {1} {2} {3}", obj.Id, obj.OtherVariable, obj.PressiusTestObject.Name, obj.PressiusTestObject.Address);
             });
         }
+
+        [Fact]
+        public void PressiusTestComplexObjectWithPressiusGeneratedObjectAndComplexChildren_ShouldPermutate()
+        {
+            var permutator = new Permutor();
+            var pressiusTestComplexObjectList = permutator
+                .GeneratePermutation<PressiusTestComplexObject>();
+
+            pressiusTestComplexObjectList.ShouldNotBeNull();
+            pressiusTestComplexObjectList.ToList().Count.ShouldBeGreaterThan(0);
+            var objectList = pressiusTestComplexObjectList.ToList();
+            objectList.ForEach(obj =>
+            {
+                _output.WriteLine("Obj: {0} {1} {2} {3}", obj.Id, obj.OtherVariable, obj.PressiusTestObject.Name, obj.PressiusTestObject.Address);
+            });
+        }
     }
 }
