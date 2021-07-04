@@ -29,6 +29,7 @@ namespace Pressius
         {
             var listOfProperties = _classType.GetProperties();
             var propertyPermutationLists = _generatePermutationList(
+                _idName,
                 listOfProperties,
                 _parameterDefinitions,
                 _objectDefinition);
@@ -39,6 +40,7 @@ namespace Pressius
         }
 
         private List<List<object>> _generatePermutationList(
+           string definedIdParameterName,
             PropertyInfo[] propertyInfos,
             List<IParameterDefinition> parameterDefinitions,
             IObjectDefinition objectDefinition)
@@ -49,6 +51,9 @@ namespace Pressius
             {
                 var inputDefinitionType = string.Empty;
 
+                var isInputDefinitionTypeNotDefined = (objectDefinition == null) ||
+                    ((objectDefinition != null) &&
+                        !objectDefinition.MatcherDictionary.TryGetValue(prop.Name, out inputDefinitionType));
                 if (objectDefinition == null)
                 {
                     // when there is no object definition, we will check if there is
@@ -66,7 +71,7 @@ namespace Pressius
                             : prop.PropertyType.Name;
                     }
                 }
-                else if (!objectDefinition.MatcherDictionary.TryGetValue(prop.Name, out inputDefinitionType))
+                else if (isInputDefinitionTypeNotDefined)
                 {
                     // when there is an object definition and cannot be matched,
                     // we will check if there is an attribute parameter name definition
@@ -85,13 +90,10 @@ namespace Pressius
                     }
                 }
 
-                var testInput = new List<object>();
-
-                if (string.Equals(prop.PropertyType.Name, "Guid"))
-                    testInput = new List<object> { null };
-                else
-                    testInput = parameterDefinitions.FirstOrDefault(
-                        id => id.TypeName.Equals(inputDefinitionType))?.InputCatalogues;
+                var testInput = (string.Equals(prop.PropertyType.Name, "Guid") ||
+                    (IsPropertyNameAnId(definedIdParameterName, prop.Name) && isInputDefinitionTypeNotDefined)) ?
+                        new List<object> { null } :
+                        parameterDefinitions.FirstOrDefault(id => id.TypeName.Equals(inputDefinitionType))?.InputCatalogues;
 
                 if (testInput == null)
                 {
@@ -115,7 +117,7 @@ namespace Pressius
         }
 
         private List<object> _generateObjectList(
-           string idParameterName,
+           string definedIdParameterName,
            Type classType,
            List<List<object>> attributePermutations)
         {
@@ -127,35 +129,43 @@ namespace Pressius
                 var constructor = classType.GetConstructor(Type.EmptyTypes);
                 if (constructor == null)
                     throw new Exception($"No parameterless constructor in the class: { classType.Name }. Please add parameterless constructor.");
-                var newInput = Activator.CreateInstance(classType);
+                var newObjectType = Activator.CreateInstance(classType);
                 for (var i = 0; i < listOfProperties.Length; i++)
                 {
                     var prop = listOfProperties[i];
-                    if (idParameterName != null && prop.Name.Equals(idParameterName))
-                    {
-                        idCount++;
-                        if (prop.PropertyType.Name.Contains("Int"))
-                            prop.SetValue(newInput, idCount);
-                        else
-                        {
-                            if (prop.PropertyType.Name.Contains("Guid"))
-                                throw new Exception("Guid does not require WithId");
+                    var propValue = permutationSet[i];
 
-                            throw new Exception("Only Int and Guid is supported for Id generator");
+                    // This is the rule for an ID or Guid type, but must not have any permutation set values.
+                    // If it is an integer type, we will create a count and generate an int id
+                    // if it is a guid, we will generate a new guid.
+                    if ((IsPropertyNameAnId(definedIdParameterName, prop.Name) || prop.PropertyType.Name.Contains("Guid")) &&
+                        propValue == null)
+                    {
+                        if (prop.PropertyType.Name.Contains("Int"))
+                        {
+                            idCount++;
+                            prop.SetValue(newObjectType, idCount);
                         }
+                        else if (prop.PropertyType.Name.Contains("Guid"))
+                            prop.SetValue(newObjectType, Guid.NewGuid());
                     }
                     else
                     {
-                        var propValue = permutationSet[i];
-                        if (prop.PropertyType.Name.Contains("Guid"))
-                            propValue = Guid.NewGuid();
-                        prop.SetValue(newInput, propValue);
+                        prop.SetValue(newObjectType, propValue);
                     }
                 }
-                results.Add(newInput);
+                results.Add(newObjectType);
             }
 
             return results;
+        }
+
+        private bool IsPropertyNameAnId(string idParameterName, string propertyName)
+        {
+            if (idParameterName != null && propertyName.Equals(idParameterName)) return true;
+            if (string.Compare(propertyName, "id", true) == 0) return true;
+            if (propertyName.ToLower().EndsWith("id")) return true;
+            return false;
         }
     }
 }

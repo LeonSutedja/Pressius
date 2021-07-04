@@ -154,17 +154,19 @@ namespace Pressius.Test
             var stringParams = new StringParameter();
             var booleanParams = new BooleanParameter();
             var decimalParams = new DecimalParameter();
+            var id = 1;
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5} {6}",
                     obj.Id, obj.Name, obj.Address,
                     obj.NullableInteger, obj.DecimalValue, obj.BooleanValue, obj.Created);
-                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Id.ShouldBe(id);
                 integerParams.InputCatalogues.ShouldContain(obj.NullableInteger);
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
                 stringParams.InputCatalogues.ShouldContain(obj.Address);
                 booleanParams.InputCatalogues.ShouldContain(obj.BooleanValue);
                 decimalParams.InputCatalogues.ShouldContain(obj.DecimalValue);
+                id++;
             });
         }
 
@@ -213,7 +215,7 @@ namespace Pressius.Test
             var decimalParams = new DecimalParameter();
             _output.WriteLine("Obj: {0} {1} {2} {3} {4} {5} {6}", id, name, address, nullableInteger,
                 decimalValues, booleanValues, created);
-            integerParams.InputCatalogues.ShouldContain(id);
+            //integerParams.InputCatalogues.ShouldContain(id);
             integerParams.InputCatalogues.ShouldContain(nullableInteger);
             stringParams.InputCatalogues.ShouldContain(name);
             stringParams.InputCatalogues.ShouldContain(address);

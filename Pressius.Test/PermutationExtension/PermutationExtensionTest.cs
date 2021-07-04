@@ -31,12 +31,14 @@ namespace Pressius.Test.PermutationExtension
             var integerParams = new IntegerParameter();
             var stringParams = new StringParameter();
             var validLocation = new ValidLocation();
+            var id = 1;
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
-                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Id.ShouldBe(id);
                 validLocation.InputCatalogues.ShouldContain(obj.Address);
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
+                id++;
             });
         }
 
@@ -79,10 +81,8 @@ namespace Pressius.Test.PermutationExtension
 
             var pressius = new Permutor();
             var pressiusTestObjectList = pressius
-                .AddParameterDefinition("ValidLocation", new List<object> {
-                   "Mens Building, 10 Latrobe Street, VIC 3000, Melbourne, Australia",
-                   "111 St Kilda, VIC 3004, Melbourne, Australia" })
-                .AddParameterDefinition("IntegerGuid", new List<object> { 1531, 9975 })
+                .AddParameterDefinition("ValidLocation", validLocation)
+                .AddParameterDefinition("IntegerGuid", integerGuid)
                 .WithObjectDefinitionMatcher("Address", "ValidLocation")
                 .WithObjectDefinitionMatcher("Id", "IntegerGuid")
                 .GeneratePermutation<PressiusTestObject>();
@@ -110,15 +110,16 @@ namespace Pressius.Test.PermutationExtension
             pressiusTestObjectList.ShouldNotBeNull();
             pressiusTestObjectList.ToList().Count.ShouldBeGreaterThan(0);
             var objectList = pressiusTestObjectList.ToList();
-            var integerParameter = new IntegerParameter();
             var stringParams = new StringParameter();
             var validLocation = new ValidLocationWithAttribute();
+            var id = 1;
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2}", obj.Id, obj.Name, obj.Address);
-                integerParameter.InputCatalogues.ShouldContain(obj.Id);
+                obj.Id.ShouldBe(id);
                 validLocation.InputCatalogues.ShouldContain(obj.Address);
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
+                id++;
             });
         }
 
@@ -182,11 +183,13 @@ namespace Pressius.Test.PermutationExtension
             var integerParams = new IntegerParameter();
             var stringParams = new StringParameter();
             var counterParams = new ValidCounterEnum();
+            var id = 1;
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2} {3}",
                     obj.Id, obj.Name, obj.Address, obj.Counter);
-                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Id.ShouldBe(id);
+                id++;
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
                 stringParams.InputCatalogues.ShouldContain(obj.Address);
                 counterParams.InputCatalogues.ShouldContain(obj.Counter);
@@ -207,11 +210,13 @@ namespace Pressius.Test.PermutationExtension
             var integerParams = new IntegerParameter();
             var stringParams = new StringParameter();
             var counterParams = new ValidCounterEnum();
+            var count = 1;
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2} {3}",
                     obj.Id, obj.Name, obj.Address, obj.Counter);
-                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Id.ShouldBe(count);
+                count++;
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
                 stringParams.InputCatalogues.ShouldContain(obj.Address);
                 counterParams.InputCatalogues.ShouldContain(obj.Counter);
@@ -231,11 +236,13 @@ namespace Pressius.Test.PermutationExtension
             var integerParams = new IntegerParameter();
             var stringParams = new StringParameter();
             var counterParams = new ValidCounterEnum();
+            var count = 1;
             objectList.ForEach(obj =>
             {
                 _output.WriteLine("Obj: {0} {1} {2} {3}",
                     obj.Id, obj.Name, obj.Address, obj.Counter);
-                integerParams.InputCatalogues.ShouldContain(obj.Id);
+                obj.Id.ShouldBe(count);
+                count++;
                 stringParams.InputCatalogues.ShouldContain(obj.Name);
                 stringParams.InputCatalogues.ShouldContain(obj.Address);
                 counterParams.InputCatalogues.ShouldContain(obj.Counter);
